@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+    <div class="login-box setup-picture">
+  <h2>Edit Profile</h2>
+
+{#        That {{ form.whatever, whatever is the name given in forms.py #}
+{#            my class is NewPostForm which has the attrs picture caption and tag #}
+  <form method="POST" enctype="multipart/form-data">
+      {% csrf_token %}
+      <img src='#' id='uploaded' alt="upload picture"> <!-- Uploaded picture goes here -->
+       <div class="user-box picture">
+        {{ form.image }}
+        </div>
+
+
+        <div class="user-box">
+            {{ form.first_name }}
+          <label>First Name</label>
+        </div>
+
+
+        <div class="user-box">
+            {{ form.last_name }}
+          <label>Last name</label>
+        </div>
+      <div class="user-box">
+            {{ form.bio }}
+          <label>Biography</label>
+        </div>
+      <div class="user-box">
+            {{ form.url }}
+          <label>URL</label>
+        </div>
+
+        <div class="user-box">
+            {{ form.location }}
+          <label>Location</label>
+        </div>
+
+      <button type="submit">
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      Edit Profile
+          </button>
+  </form>
+</div>
+
+    <script>
+        $(function () {
+
+            var picture;
+            // Viewing Uploaded Picture On Setup Admin Profile
+            function livePreviewPicture(picture) {
+                if (picture.files && picture.files[0]) {
+                    var picture_reader = new FileReader();
+                    picture_reader.onload = function (event) {
+                        $('#uploaded').attr('src', event.target.result);
+                    };
+                    picture_reader.readAsDataURL(picture.files[0]);
+                }
+            }
+
+            $('.setup-picture form .picture input').on('change', function () {
+                $('#uploaded').fadeIn();
+                livePreviewPicture(this);
+            });
+
+        });
+    </script> {#    Picture Loader script #}
+
+{% endblock %}

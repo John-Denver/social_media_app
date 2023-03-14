@@ -35,7 +35,7 @@
 
           <!-- follow button -->
             {% if profile.user == request.user %}
-                <a href="#" class="bg-gray-200 px-2 py-1
+                <a href="{% url 'edit_profile' %}" class="bg-gray-200 px-2 py-1
                         text-black font-semibold text-sm rounded block text-center
                         sm:inline-block block">Edit Profile</a>
                  <i class="fas fa-cog ml-5 mt-1"></i>

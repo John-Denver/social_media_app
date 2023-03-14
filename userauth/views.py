@@ -6,6 +6,7 @@ from django.db import transaction
 
 
 from post.models import Post, Follow, Stream
+from userauth.forms import EditProfileForm
 from userauth.models import *
 
 
@@ -76,3 +77,30 @@ def follow(request, username, option):
         return HttpResponseRedirect(reverse('profile', args=[username]))
     except User.DoesNotExist:
         return HttpResponseRedirect(reverse('profile', args=[username]))
+
+
+def edit_profile(request):
+    user = request.user.id
+    profile = Profile.objects.get(user__id=user)
+
+    if request.method == "POST":
+        form = EditProfileForm(request.POST, request.FILES)
+        if form.is_valid():
+            profile.image = form.cleaned_data.get('image')
+            profile.first_name = form.cleaned_data.get('first_name')
+            profile.last_name = form.cleaned_data.get('last_name')
+            profile.created = form.cleaned_data.get('created')
+            profile.bio = form.cleaned_data.get('bio')
+            profile.location = form.cleaned_data.get('location')
+            profile.url = form.cleaned_data.get('url')
+            profile.save()
+            return redirect('profile', profile.user.username)
+    else:
+        form = EditProfileForm
+        context = {
+            'form': form,
+        }
+        return render(request, 'edit-profile.html', context)
+
+
+

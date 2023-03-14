@@ -24,6 +24,7 @@ from userauth.views import *
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('post.urls')),
+    path('users/', include('userauth.urls')),
 
     #     Profile page urls
 
@@ -36,6 +37,7 @@ urlpatterns = [
     path('<username>/', user_profile, name="profile"),
     path('<username>/saved', user_profile, name="favourite"),
     path('<username>/follow/<option>', follow, name="follow"),
+    # path('<username>/edit_profile', edit_profile, name="edit_profile"),
 ]
 
 if settings.DEBUG:
