@@ -250,9 +250,9 @@
                 <div class="profile-button__border"></div>
                 <div class="profile-button__picture">
                       {% if profile == "image" %}
-                  <img src="{{ profile.image.url }}" alt="User Picture" />
+                  <img src="{{ user.profile.image.url }}" alt="User Picture" />
                     {% else %}
-                          <img src="{% static 'assets1/champe.png' %}" alt="User Picture" />
+                          <img src="{% static 'assets1/default-user.png' %}" alt="User Picture" />
                     {% endif %}
                 </div>
               </button>

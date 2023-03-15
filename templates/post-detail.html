@@ -12,7 +12,7 @@
               <div class="post__header">
                 <div class="post__profile">
                   <a href="#" class="post__avatar">
-                    <img src="{% static 'assets1/default-user.png' %}" alt="User Picture" />
+                    <img src="{{ post_profile.user.profile.image.url }}" alt="User Picture" />
                   </a>
                   <a href="#" class="post__user">{{ post.user.username }}</a>
                 </div>
@@ -127,7 +127,7 @@
                 <div class="post__infos">
                   <div class="post__likes">
                     <a href="#" class="post__likes-avatar">
-                      <img src="{{ post.user.picture.url }}" alt="User Picture" />
+                      <img src="{{ user.profile.image.url }}" alt="User Picture" />
                     </a>
 
                     <span
@@ -152,131 +152,47 @@
 
                   <span class="post__date-time">{{ post.posted }}</span>
                 </div>
+
+
+
+              <div class="clearfix"></div>
+<form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+
+        <div style="width: 85%; border: 1px solid salmon">
+            {{ form.body }}
+        </div>
+        <div style="position: relative; margin-left: 87%; margin-top: -5%">
+            <input type="submit" value="Comment" style="color: #1161ee; padding: 5px; font-weight: 900"/>
+        </div>
+
+  </form>
+              <p class="" href="">Comments {{ comment_count }}</p>
+
+                           {% for comment in comments %}
+               <div class="post__description">
+{#               <div class="post__profile">#}
+{#                  <a href="#" class="post__avatar">#}
+{#                    <img src="{{ comment.user.profile.image.url }}" alt="User Picture" />#}
+{#                  </a>#}
+{#               </div>#}
+                    <span>
+                        <a class="post__name--underline" href="{% url 'profile' comment.user.username %}"><b>{{ comment.user.username }}:</b></a>
+                        <a class="" href="">{{ comment.body }}</a>
+                    </span>
+                  </div>
+ {% endfor %}
+
+              <div>
+
+
+              </div>
+
+
               </div>
             </article>
           </div>
         </div>
-
-        <section class="side-menu">
-          <div class="side-menu__user-profile">
-            <a
-              href="https://github.com/baby_b.oss"
-              target="_blank"
-              class="side-menu__user-avatar"
-            >
-              <img src="{% static 'assets1/default-user.png' %}" alt="User Picture" />
-            </a>
-            <div class="side-menu__user-info">
-              <a href="https://github.com/baby_b.oss" target="_blank"
-                >baby_b.oss</a
-              >
-              <span>Leonardo Costa</span>
-            </div>
-            <button class="side-menu__user-button">Switch</button>
-          </div>
-
-          <div class="side-menu__suggestions-section">
-            <div class="side-menu__suggestions-header">
-              <h2>Suggestions for You</h2>
-              <button>See All</button>
-            </div>
-            <div class="side-menu__suggestions-content">
-              <div class="side-menu__suggestion">
-                <a href="#" class="side-menu__suggestion-avatar">
-                  <img src="{% static 'assets1/default-user.png' %}" alt="User Picture" />
-                </a>
-                <div class="side-menu__suggestion-info">
-                  <a href="#">userdenver16</a>
-                  <span>Followed by user1, user2 and 9 others</span>
-                </div>
-                <button class="side-menu__suggestion-button">Follow</button>
-              </div>
-              <div class="side-menu__suggestion">
-                <a href="#" class="side-menu__suggestion-avatar">
-                  <img src="{% static 'assets1/default-user.png' %}" alt="User Picture" />
-                </a>
-                <div class="side-menu__suggestion-info">
-                  <a href="#">userdenver17</a>
-                  <span>Followed by user1, user2 and 3 others</span>
-                </div>
-                <button class="side-menu__suggestion-button">Follow</button>
-              </div>
-              <div class="side-menu__suggestion">
-                <a href="#" class="side-menu__suggestion-avatar">
-                  <img src="{% static 'assets1/default-user.png' %}" alt="User Picture" />
-                </a>
-                <div class="side-menu__suggestion-info">
-                  <a href="#">userdenver18</a>
-                  <span>Followed by user1 and 9 others</span>
-                </div>
-                <button class="side-menu__suggestion-button">Follow</button>
-              </div>
-              <div class="side-menu__suggestion">
-                <a href="#" class="side-menu__suggestion-avatar">
-                  <img src="{% static 'assets1/default-user.png' %}" alt="User Picture" />
-                </a>
-                <div class="side-menu__suggestion-info">
-                  <a href="#">userdenver19</a>
-                  <span>Followed by user1 and 3 others</span>
-                </div>
-                <button class="side-menu__suggestion-button">Follow</button>
-              </div>
-              <div class="side-menu__suggestion">
-                <a href="#" class="side-menu__suggestion-avatar">
-                  <img src="{% static 'assets1/default-user.png' %}" alt="User Picture" />
-                </a>
-                <div class="side-menu__suggestion-info">
-                  <a href="#">userdenver20</a>
-                  <span>Followed by user1 and 6 others</span>
-                </div>
-                <button class="side-menu__suggestion-button">Follow</button>
-              </div>
-            </div>
-          </div>
-
-          <div class="side-menu__footer">
-            <div class="side-menu__footer-links">
-              <ul class="side-menu__footer-list">
-                <li class="side-menu__footer-item">
-                  <a class="side-menu__footer-link" href="#">About</a>
-                </li>
-                <li class="side-menu__footer-item">
-                  <a class="side-menu__footer-link" href="#">Help</a>
-                </li>
-                <li class="side-menu__footer-item">
-                  <a class="side-menu__footer-link" href="#">Press</a>
-                </li>
-                <li class="side-menu__footer-item">
-                  <a class="side-menu__footer-link" href="#">API</a>
-                </li>
-                <li class="side-menu__footer-item">
-                  <a class="side-menu__footer-link" href="#">Jobs</a>
-                </li>
-                <li class="side-menu__footer-item">
-                  <a class="side-menu__footer-link" href="#">Privacy</a>
-                </li>
-                <li class="side-menu__footer-item">
-                  <a class="side-menu__footer-link" href="#">Terms</a>
-                </li>
-                <li class="side-menu__footer-item">
-                  <a class="side-menu__footer-link" href="#">Locations</a>
-                </li>
-                <li class="side-menu__footer-item">
-                  <a class="side-menu__footer-link" href="#">Top Accounts</a>
-                </li>
-                <li class="side-menu__footer-item">
-                  <a class="side-menu__footer-link" href="#">Hashtag</a>
-                </li>
-                <li class="side-menu__footer-item">
-                  <a class="side-menu__footer-link" href="#">Language</a>
-                </li>
-              </ul>
-            </div>
-
-            <span class="side-menu__footer-copyright"
-              >&copy; 2023 Jewagram from Aquila</span>
-          </div>
-        </section>
       </section>
     </main>
 

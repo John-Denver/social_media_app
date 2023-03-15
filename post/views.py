@@ -1,10 +1,13 @@
 from django.shortcuts import render, redirect, get_object_or_404
+
+from comment.forms import CommentForm
 from post.models import Tag, Post, Stream, Follow, Likes
 from django.contrib.auth.decorators import login_required
 from post.forms import NewPostForm
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 from userauth.models import Profile
+from comment.models import Comment
 
 
 # Create your views here.
@@ -59,10 +62,30 @@ def new_post(request):
 
 def post_detail(request, post_id):
     post = get_object_or_404(Post, id=post_id)
-    context = {
-        'post': post
-    }
-    return render(request, 'post-detail.html', context)
+    # commenting on a post
+    comments = Comment.objects.filter(post=post).order_by('-date')
+    comment_count = Comment.objects.filter(post=post_id).count()
+
+    # Comment Form
+    if request.method == "POST":
+        form = CommentForm(request.POST, request.FILES)
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.post = post
+            comment.user = request.user
+            comment.save()
+            # return and execute the function named index
+            return HttpResponseRedirect(reverse("post_detail", args=[post_id]))
+
+    else:
+        form = CommentForm()
+        context = {
+            'form': form,
+            'post': post,
+            'comments': comments,
+            'comment_count': comment_count,
+            }
+        return render(request, 'post-detail.html', context)
 
 
 def tags(request, tag_slug):

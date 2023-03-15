@@ -3053,9 +3053,9 @@ function isPatternNext(pattern, pos, flags, needlePattern) {
     var inlineCommentPattern = '\\(\\?#[^)]*\\)';
     var lineCommentPattern = '#[^#\\n]*';
     var patternsToIgnore = flags.indexOf('x') > -1 ?
-        // Ignore any leading whitespace, line comments, and inline comments
+        // Ignore any leading whitespace, line comment, and inline comment
         ['\\s', lineCommentPattern, inlineCommentPattern] :
-        // Ignore any leading inline comments
+        // Ignore any leading inline comment
         [inlineCommentPattern];
     return nativ.test.call(
         new RegExp('^(?:' + patternsToIgnore.join('|') + ')*(?:' + needlePattern + ')'),
@@ -3276,7 +3276,7 @@ function toObject(value) {
  *   Additional XRegExp flags:
  *     - `n` - explicit capture
  *     - `s` - dot matches all (aka singleline)
- *     - `x` - free-spacing and line comments (aka extended)
+ *     - `x` - free-spacing and line comment (aka extended)
  *     - `A` - astral (requires the Unicode Base addon)
  *   Flags cannot be provided when constructing one `RegExp` from another.
  * @returns {RegExp} Extended regular expression object.
@@ -4517,7 +4517,7 @@ XRegExp.addToken(
 );
 
 /*
- * Comment pattern: `(?# )`. Inline comments are an alternative to the line comments allowed in
+ * Comment pattern: `(?# )`. Inline comment are an alternative to the line comment allowed in
  * free-spacing mode (flag x).
  */
 XRegExp.addToken(
@@ -4527,7 +4527,7 @@ XRegExp.addToken(
 );
 
 /*
- * Whitespace and line comments, in free-spacing mode (aka extended mode, flag x) only.
+ * Whitespace and line comment, in free-spacing mode (aka extended mode, flag x) only.
  */
 XRegExp.addToken(
     /\s+|#[^\n]*\n?/,
