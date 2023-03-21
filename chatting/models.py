@@ -11,7 +11,8 @@ class Message(models.Model):
     date = models.DateTimeField(auto_now_add=True)
     is_read = models.BooleanField(default=False)
 
-    def send_message(self, from_user, to_user, body):
+    @staticmethod
+    def send_message(from_user, to_user, body):
         #         Sender message function
         sender_message = Message(
             user=from_user,
@@ -33,7 +34,8 @@ class Message(models.Model):
 
         return sender_message
 
-    def get_message(self, user):
+    @staticmethod
+    def get_message(user):
         users = []
         messages = Message.objects.filter(user=user).values("recipient").annotate(last=Max('date')).order_by('-last')
         for message in messages:

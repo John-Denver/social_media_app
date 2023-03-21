@@ -28,7 +28,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('post.urls')),
     path('users/', include('userauth.urls')),
-    # path('comment/', include('comment.urls')),
+    path('message/', include('chatting.urls')),
 
     #     Profile page urls
 

@@ -1,0 +1,101 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<div class="container">
+	<div class="row no-gutters">
+	  <div class="col-md-4 border-right">
+		<div class="settings-tray">
+		  <img class="profile-image" src="https://www.clarity-enhanced.net/wp-content/uploads/2020/06/filip.jpg" alt="Profile img">
+		  <span class="settings-tray--right">
+			<i class="fa-solid fa-rotate"></i>
+			<i class="fa-regular fa-message"></i>
+			<i class="fa-solid fa-bars"></i>
+		  </span>
+		</div>
+		<div class="search-box">
+		  <div class="input-wrapper">
+			<i class="material-icons">search</i>
+			<input placeholder="Search here" type="text">
+		  </div>
+		</div>
+          {% for message in messages %}
+                <div class="friend-drawer friend-drawer--onhover">
+                  <img class="profile-image" src="{{ message.user.profile.image.url }}" alt="">
+                  <div class="text">
+                    <h6>{{ message.user.profile.first_name }} {{ message.user.profile.last_name }}</h6>
+                    <p class="text-muted">@{{ message.user.username }}</p>
+                  </div>
+                  <span class="time text-muted small">19:47</span>
+                </div>
+                <hr>
+        {% endfor %}
+	  </div>
+	  <div class="col-md-8">
+		<div class="settings-tray">
+			<div class="friend-drawer no-gutters friend-drawer--grey">
+			<img class="profile-image" src="{{ direct.user.profile.image.url }}" alt="">
+			<div class="text">
+			  <h6>Robo Denver</h6>
+			  <p class="text-muted">Layin' down the law since like before Christ...</p>
+			</div>
+			<span class="settings-tray--right">
+			  <i class="fa-solid fa-rotate"></i>
+			<i class="fa-regular fa-message"></i>
+			<i class="fa-solid fa-bars"></i>
+			</span>
+		  </div>
+		</div>
+		<div class="chat-panel col-md-8">
+
+            {% for direct in directs %}
+                {% if direct.sender == request.user %}
+		<div class="row no-gutters">
+                            <div class="col-md-3 offset-md-10">
+                                 <p class="small">{{ direct.date|date:"d M, P" }}</p>
+                                <div class="chat-bubble chat-bubble--right">
+                                {{ direct.body }}
+                              </div>
+                            </div>
+                          </div>
+                {% else %}
+
+                      <div class="row no-gutters">
+			<div class="col-md-3">
+                <p class="small">{{ direct.date|date:"d M, P" }}</p>
+{#                <img class="chat-image" src="{{ direct.user.profile.image.url }}" alt="">#}
+			  <div class="chat-bubble chat-bubble--left">
+                  {{ direct.body }}
+			  </div>
+			</div>
+		  </div>
+                {% endif %}
+            {% endfor %}
+
+        </div> {# chat-panel #}
+
+		  <div class="row">
+			<div class="col-12">
+			  <div class="chat-box-tray">
+				<i class="fa-regular fa-face-smile"></i>
+				<input type="text" placeholder="Type your message here...">
+				<i class="fa-solid fa-microphone"></i>
+                  <a href="">
+                  <input type="submit" value="">
+				<i class="fa-solid fa-paper-plane"></i>
+                  </a>
+			  </div>
+			</div>
+		  </div>
+		</div>
+	  </div>
+	</div>
+    <script>
+    $( '.friend-drawer--onhover' ).on( 'click',  function() {
+
+  $( '.chat-bubble' ).hide('slow').show('slow');
+
+});
+    </script>
+
+{% endblock %}
