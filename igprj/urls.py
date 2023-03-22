@@ -23,6 +23,7 @@ from userauth.views import *
 
 from comment.models import *
 from comment.views import *
+from chatting.views import *
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -43,6 +44,12 @@ urlpatterns = [
     path('<username>/follow/<option>', follow, name="follow"),
 
     # path('<username>/edit_profile', edit_profile, name="edit_profile"),
+
+
+    #  Chatting/messaging section urls
+    # path('direct/<username>/', chats, name="chats"),
+
+
 ]
 
 if settings.DEBUG:

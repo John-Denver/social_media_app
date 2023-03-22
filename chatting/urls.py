@@ -9,5 +9,7 @@ from chatting import views
 
 urlpatterns = [
     path('inbox/', views.inbox, name="inbox"),
+    path('direct/<username>/', views.chats, name="chats"),
+    path('send/', views.send_chat, name="send_chat"),
 
 ]
