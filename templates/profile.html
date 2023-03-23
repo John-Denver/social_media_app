@@ -46,7 +46,7 @@
                         text-white font-semibold text-sm rounded block text-center
                         sm:inline-block block">UnFollow</a>
 
-                      <a href="#" class="bg-gray-300 bg-opacity-70 px-2 py-1
+                      <a href="{% url 'new_message' profile.user %}" class="bg-gray-300 bg-opacity-70 px-2 py-1
                         text-black font-semibold text-sm rounded block text-center
                         sm:inline-block block ml-5">Message</a>
                       {% else %}

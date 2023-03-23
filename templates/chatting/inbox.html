@@ -53,24 +53,31 @@
 
             {% for direct in directs %}
                 {% if direct.sender == request.user %}
-		<div class="row no-gutters">
-                            <div class="col-md-3 offset-md-10">
-                                 <p class="small">{{ direct.date|date:"d M, P" }}</p>
-                                <div class="chat-bubble chat-bubble--right">
-                                {{ direct.body }}
-                              </div>
-                            </div>
-                          </div>
+                    <div class="row no-gutters">
+                            {% if direct.body %}
+                                <div class="col-md-3 offset-md-10">
+                                     <p class="small">{{ direct.date|date:"d M, P" }}</p>
+                                    <div class="chat-bubble chat-bubble--right">
+                                    {{ direct.body }}
+                                  </div>
+                                </div>
+                            {% else %}
+
+                            {% endif %}
+                      </div>
                 {% else %}
 
                       <div class="row no-gutters">
-			<div class="col-md-3">
-                <p class="small">{{ direct.date|date:"d M, P" }}</p>
-{#                <img class="chat-image" src="{{ direct.user.profile.image.url }}" alt="">#}
-			  <div class="chat-bubble chat-bubble--left">
-                  {{ direct.body }}
-			  </div>
-			</div>
+			                {% if direct.body %}
+                                <div class="col-md-3 offset-md-10">
+                                     <p class="small">{{ direct.date|date:"d M, P" }}</p>
+                                    <div class="chat-bubble chat-bubble--left">
+                                    {{ direct.body }}
+                                  </div>
+                                </div>
+                            {% else %}
+
+                            {% endif %}
 		  </div>
                 {% endif %}
             {% endfor %}

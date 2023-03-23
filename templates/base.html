@@ -11,6 +11,7 @@
     <link rel="stylesheet" type="text/css" href="{% static 'assets1/form_style.css' %}" />
       <link rel="stylesheet" type="text/css" href="{% static 'assets1/profile_style.css' %}" />
       <link rel="stylesheet" type="text/css" href="{% static 'assets1/chatting_style.css' %}" />
+      <link rel="stylesheet" type="text/css" href="{% static 'assets1/search.css' %}" />
 
     <script src="{% static 'assets1/script.js' %}" defer></script>
 
@@ -261,11 +262,12 @@
               <button class="profile-button">
                 <div class="profile-button__border"></div>
                 <div class="profile-button__picture">
-                      {% if profile == "image" %}
-                  <img src="{{ user.profile.image.url }}" alt="User Picture" />
+                    {% if user.profile.image.url %}
+                        <img src="{{ user.profile.image.url }}" alt="User Picture">
                     {% else %}
-                          <img src="{% static 'assets1/default-user.png' %}" alt="User Picture" />
+                         <img src="{% static 'assets1/default-user.png' %}" alt="User Picture">
                     {% endif %}
+
                 </div>
               </button>
             </a>

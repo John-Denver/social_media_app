@@ -3,6 +3,8 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 
 from chatting.models import Message
+from django.core.paginator import Paginator
+from django.db.models import Q
 
 
 @login_required
@@ -61,3 +63,36 @@ def send_chat(request):
     else:
         pass
 
+
+def user_search(request):
+    query = request.GET.get('q')
+    context = {
+
+    }
+    if query:
+        users = User.objects.filter(Q(username__icontains=query))
+
+        #  Pagination
+        paginator = Paginator(users, 8)
+        page_number = request.GET.get('page')
+        users_paginator = paginator.get_page(page_number)
+
+        # when passing contexts what's inside the ' ' will be called in html templated i.e. {{ profile.user }}
+        context = {
+            'users': users_paginator
+        }
+    return render(request, 'search.html', context)
+
+
+# Sending a message to user from their profile button
+def new_message(request, username):
+    from_user = request.user
+    body = ''
+    try:
+        to_user = User.objects.get(username=username)
+    except Exception as e:
+        return redirect('user_search')
+    # if user sending message is not him/herself
+    if from_user != to_user:
+        Message.send_message(from_user, to_user, body)
+    return redirect('inbox')
