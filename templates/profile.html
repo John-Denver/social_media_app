@@ -10,13 +10,13 @@
 
       <div class="md:w-3/12 md:ml-16">
         <!-- profile image -->
-{#           {% if profile == "image" %}#}
-        <img class="w-20 h-20 md:w-40 md:h-40 object-cover rounded-full
-                     border-2 border-pink-600 p-1" src="{{ profile.image.url }}" alt="no profile">
-{#          {% else %}#}
-{#          <img class="w-20 h-20 md:w-40 md:h-40 object-cover rounded-full#}
-{#                     border-2 border-pink-600 p-1" src="{% static 'assets1/default-user.png' %}" alt="no profile">#}
-{#          {% endif %}#}
+        {% if profile.image %}
+            <img class="w-20 h-20 md:w-40 md:h-40 object-cover rounded-full
+                         border-2 border-pink-600 p-1" src="{{ profile.image.url }}" alt="no profile">
+              {% else %}
+              <img class="w-20 h-20 md:w-40 md:h-40 object-cover rounded-full
+                         border-2 border-pink-600 p-1" src="{% static 'assets1/default-user.png' %}" alt="no profile">
+        {% endif %}
       </div>
 
       <!-- profile meta -->
@@ -28,7 +28,7 @@
 
           <!-- badge -->
           <span class="inline-block fas fa-certificate fa-lg text-blue-500
-                               relative mr-6 mt-4 text-xl transform -translate-y-2" aria-hidden="true">
+                               relative mr-6 mt-3 text-xl transform -translate-y-2" aria-hidden="true">
             <i class="fas fa-check text-white text-xs absolute inset-x-0
                                ml-1 mt-2"></i>
           </span>
@@ -80,7 +80,7 @@
 
         <!-- user meta form medium screens -->
         <div class="hidden md:block">
-          <h1 class="font-semibold">{{ profile.first_name }} {{ profile.last_name }}</h1>
+          <h6 class="font-semibold">{{ profile.first_name }} {{ profile.last_name }}</h6>
             <p>{{ profile.bio }}</p>
             <a href="{{ profile.url }}" target="_blank" style="color: #1161ee">{{ profile.url }}</a><br>
           <p>{{ profile.location }} <i class="fas fa-location inset-x-0"></i></p>

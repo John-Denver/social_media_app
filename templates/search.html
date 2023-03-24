@@ -26,7 +26,7 @@
         {% for user in users %}
             <div class="side-menu__user-profile" style="text-align: start; border: solid rgba(192, 192, 192, 0.514) 1px; padding: 10px; border-radius: 25px;">
                 <a href="{% url 'profile' user.username %}" class="side-menu__user-avatar">
-                    {% if user.profile.image.url %}
+                    {% if user.profile.image %}
                         <img src="{{ user.profile.image.url }}" alt="User Picture">
                     {% else %}
                          <img src="{% static 'assets1/default.jpg' %}" alt="User Picture">

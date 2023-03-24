@@ -40,7 +40,7 @@ class Post(models.Model):
     picture = models.ImageField(upload_to=user_directory_path, verbose_name="picture")
     caption = models.CharField(max_length=10000, verbose_name="caption")
     posted = models.DateField(auto_now_add=True)
-    tag = models.ManyToManyField(Tag, related_name="tags", blank=True, null=True)
+    tag = models.ManyToManyField(Tag, related_name="tags", blank=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     likes = models.IntegerField(default=0)
 

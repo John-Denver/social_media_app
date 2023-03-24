@@ -84,7 +84,7 @@ def edit_profile(request):
     profile = Profile.objects.get(user__id=user)
 
     if request.method == "POST":
-        form = EditProfileForm(request.POST, request.FILES)
+        form = EditProfileForm(request.POST or None, request.FILES or None)
         if form.is_valid():
             profile.image = form.cleaned_data.get('image')
             profile.first_name = form.cleaned_data.get('first_name')
