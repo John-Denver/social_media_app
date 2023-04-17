@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<link href="https://fonts.googleapis.com/css?family=Indie+Flower|Overpass+Mono" rel="stylesheet">
+
+<div id="main-wrapper">
+  <div class="main-content">
+    <div class="logo">
+      <img src="{% static 'assets1/logo.svg' %}" />
+    </div>
+    <div class="l-part">
+      <input type="text" placeholder="Username" class="input-1" />
+      <div class="overlap-text">
+        <input type="password" placeholder="Password" class="input-2" />
+        <a href="#">Forgot?</a>
+      </div>
+      <input type="button" value="Log in" class="btn1" />
+    </div>
+  </div>
+  <div class="sub-content">
+    <div class="s-part">
+      Don't have an account?<a href="#">Sign up</a>
+    </div>
+  </div>
+</div>
+
+
+
+{% endblock %}

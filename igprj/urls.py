@@ -30,6 +30,7 @@ urlpatterns = [
     path('', include('post.urls')),
     path('users/', include('userauth.urls')),
     path('message/', include('chatting.urls')),
+    path('authorize/', include('users.urls')),
 
     #     Profile page urls
 
