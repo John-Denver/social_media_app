@@ -6,11 +6,6 @@
 
 <link href="https://fonts.googleapis.com/css?family=Indie+Flower|Overpass+Mono" rel="stylesheet">
 
-    {% if messages %}
-        {% for message in messages %}
-            <div class="alert alert-{{ message.tags }}">{{ message }}</div>
-        {% endfor %}
-    {% endif %}
 <div id="main-wrapper">
   <div class="main-content">
     <div class="logo">
@@ -21,15 +16,24 @@
         <form action="" method="POST">
             {% csrf_token %}
             {{ form|crispy }}
+{#              <input type="text" placeholder="Username" class="input-1" />#}
+{##}
+{#              <div class="overlap-text">#}
+{#                <input type="password" placeholder="Password" class="input-2" />#}
+{#              </div>#}
+{##}
+{#              <div class="overlap-text">#}
+{#                <input type="password" placeholder="Confirm Password" class="input-2" />#}
+{#              </div>#}
                 <br>
-              <input type="submit" value="Sign In" class="btn1" />
+              <input type="submit" value="Sign Up" class="btn1" />
         </form>
 
     </div>
   </div>
   <div class="sub-content">
     <div class="s-part">
-      Don't have an account?<a href="{% url 'register' %}">Sign Up</a>
+      Already have an account?<a href="{% url 'login' %}">Sign in</a>
     </div>
   </div>
 </div>

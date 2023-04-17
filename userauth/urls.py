@@ -9,4 +9,5 @@ from userauth.views import user_profile
 
 urlpatterns = [
     path('edit_profile/', views.edit_profile, name="edit_profile"),
+    path('add_profile/', views.add_profile, name="add_profile"),
 ]

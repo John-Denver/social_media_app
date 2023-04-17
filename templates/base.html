@@ -188,6 +188,12 @@
           <a href="#">
              <i class="fa fa-heart fa-1x"></i>
           </a>
+
+        <a href="{% url 'logout' %}" title="Sign-Out">
+             <i class="fa fa-sign-out fa-1x"></i>
+          </a>
+
+        {% if user.profile %}
             <a href="{% url 'profile' user.username %}">
               <button class="profile-button">
                 <div class="profile-button__border"></div>
@@ -201,6 +207,16 @@
                 </div>
               </button>
             </a>
+            {% else %}
+                 <a href="{% url 'add_profile' %}">
+                    <button class="profile-button">
+                        <div class="profile-button__border"></div>
+                        <div class="profile-button__picture">
+                                 <img src="{% static 'assets1/default-user.png' %}" alt="User Picture">
+                        </div>
+                      </button>
+                 </a>
+        {% endif %}
         </div>
       </nav>
     </header>

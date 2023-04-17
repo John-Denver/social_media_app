@@ -4,12 +4,14 @@ from django.core.paginator import Paginator
 from django.urls import resolve, reverse
 from django.db import transaction
 
-
 from post.models import Post, Follow, Stream
-from userauth.forms import EditProfileForm
+from userauth.forms import *
 from userauth.models import *
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 
 
+@login_required()
 def user_profile(request, username):
     user = get_object_or_404(User, username=username)
     profile = Profile.objects.get(user=user)
@@ -56,6 +58,7 @@ def user_profile(request, username):
 
 
 # The option is going to help track if a user is following a user or not
+@login_required()
 def follow(request, username, option):
     user = request.user
     following = get_object_or_404(User, username=username)
@@ -72,13 +75,14 @@ def follow(request, username, option):
 
             with transaction.atomic():
                 for post in posts:
-                    stream = Stream(post=post, user=user, date=post.posted,following=following)
+                    stream = Stream(post=post, user=user, date=post.posted, following=following)
                     stream.save()
         return HttpResponseRedirect(reverse('profile', args=[username]))
     except User.DoesNotExist:
         return HttpResponseRedirect(reverse('profile', args=[username]))
 
 
+@login_required()
 def edit_profile(request):
     user = request.user.id
     profile = Profile.objects.get(user__id=user)
@@ -103,4 +107,17 @@ def edit_profile(request):
         return render(request, 'edit-profile.html', context)
 
 
-
+@login_required()
+def add_profile(request):
+    if request.method == "POST":
+        form = AddProfileForm(request.POST or None, request.FILES or None)
+        if form.is_valid():
+            profile = form.save(commit=False)
+            profile.user = request.user
+            profile.save()
+            username = form.cleaned_data.get('username')
+            messages.success(request, f'Hello {username} your profile has been created successfully')
+            return redirect('profile', profile.user.username)
+    else:
+        form = AddProfileForm()
+    return render(request, 'add_profile.html', {'form': form})

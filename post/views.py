@@ -12,7 +12,8 @@ from comment.models import Comment
 
 # Create your views here.
 
-
+# the redirect if not logged in has been specified in settings.py under LOGIN_URL
+@login_required()
 def index(request):
     user = request.user  # get logged in user
     posts = Stream.objects.filter(user=user)  # stream from models, this line gets posts of current logged-in user
@@ -27,7 +28,7 @@ def index(request):
     }
     return render(request, 'index.html', context)
 
-
+@login_required()
 def new_post(request):
     user = request.user.id
     tags_objs = []
@@ -59,7 +60,7 @@ def new_post(request):
         }
         return render(request, 'newpost.html', context)
 
-
+@login_required()
 def post_detail(request, post_id):
     post = get_object_or_404(Post, id=post_id)
     # commenting on a post
@@ -87,7 +88,7 @@ def post_detail(request, post_id):
             }
         return render(request, 'post-detail.html', context)
 
-
+@login_required()
 def tags(request, tag_slug):
     tag = get_object_or_404(Tag, slug=tag_slug)
     posts = Post.objects.filter(tag=tag).order_by('-posted')
@@ -99,7 +100,7 @@ def tags(request, tag_slug):
 
     return render(request, 'hashtags.html', context)
 
-
+@login_required()
 def likes(request, post_id):
     user = request.user
     post = Post.objects.get(id=post_id)
@@ -118,7 +119,7 @@ def likes(request, post_id):
     post.save()
     return HttpResponseRedirect(reverse('post_detail', args=[post_id]))
 
-
+@login_required()
 def favourite(request, post_id):
     user = request.user
     post = Post.objects.get(id=post_id)

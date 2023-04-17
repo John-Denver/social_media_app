@@ -64,6 +64,7 @@ def send_chat(request):
         pass
 
 
+@login_required
 def user_search(request):
     query = request.GET.get('q')
     context = {
@@ -84,6 +85,7 @@ def user_search(request):
     return render(request, 'search.html', context)
 
 
+@login_required
 # Sending a message to user from their profile button
 def new_message(request, username):
     from_user = request.user

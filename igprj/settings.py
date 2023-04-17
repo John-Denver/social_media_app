@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     # my applications
 
     'crispy_forms',
+    'crispy_bootstrap5',
     'post',
     'userauth',
     'comment',
@@ -135,9 +136,9 @@ STATICFILES_DIRS = [
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-LOGIN_REDIRECT_URL = ''
-LOGOUT_REDIRECT_URL = ''
-LOGIN_URL = ''
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/'
+LOGIN_URL = '/authorize/auth'
 
 CRISPY_TEMPLATE_PACK = 'bootstrap5'
 

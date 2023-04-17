@@ -18,3 +18,13 @@ class EditProfileForm(forms.ModelForm):
     class Meta:
         model = Profile
         fields = ['first_name', 'last_name', 'image', 'bio', 'url', 'location']
+
+
+class AddProfileForm(forms.ModelForm):
+    image = forms.ImageField(required=False)
+    url = forms.URLField()
+
+    class Meta:
+        model = Profile
+        exclude = ['user']
+        fields = ['first_name', 'last_name', 'image', 'bio', 'url', 'location']

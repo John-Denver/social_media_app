@@ -6,30 +6,27 @@
 
 <link href="https://fonts.googleapis.com/css?family=Indie+Flower|Overpass+Mono" rel="stylesheet">
 
-    {% if messages %}
+<div id="main-wrapper">
+  <div class="main-content">
+
+      {% if messages %}
         {% for message in messages %}
             <div class="alert alert-{{ message.tags }}">{{ message }}</div>
         {% endfor %}
     {% endif %}
-<div id="main-wrapper">
-  <div class="main-content">
+
     <div class="logo">
       <img src="{% static 'assets1/logo.svg' %}" />
     </div>
 
     <div class="l-part">
-        <form action="" method="POST">
+        <form action="" method="POST" enctype="multipart/form-data">
             {% csrf_token %}
             {{ form|crispy }}
                 <br>
-              <input type="submit" value="Sign In" class="btn1" />
+              <input type="submit" value="Create Profile" class="btn1" />
         </form>
 
-    </div>
-  </div>
-  <div class="sub-content">
-    <div class="s-part">
-      Don't have an account?<a href="{% url 'register' %}">Sign Up</a>
     </div>
   </div>
 </div>
