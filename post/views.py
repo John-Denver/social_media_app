@@ -28,6 +28,7 @@ def index(request):
     }
     return render(request, 'index.html', context)
 
+
 @login_required()
 def new_post(request):
     user = request.user.id
@@ -60,6 +61,7 @@ def new_post(request):
         }
         return render(request, 'newpost.html', context)
 
+
 @login_required()
 def post_detail(request, post_id):
     post = get_object_or_404(Post, id=post_id)
@@ -85,8 +87,9 @@ def post_detail(request, post_id):
             'post': post,
             'comments': comments,
             'comment_count': comment_count,
-            }
+        }
         return render(request, 'post-detail.html', context)
+
 
 @login_required()
 def tags(request, tag_slug):
@@ -100,6 +103,7 @@ def tags(request, tag_slug):
 
     return render(request, 'hashtags.html', context)
 
+
 @login_required()
 def likes(request, post_id):
     user = request.user
@@ -111,6 +115,7 @@ def likes(request, post_id):
     if not liked:
         liked = Likes.objects.create(user=user, post=post)
         current_likes = current_likes + 1
+
     else:
         liked = Likes.objects.filter(user=user, post=post).delete()
         current_likes = current_likes - 1
@@ -118,6 +123,7 @@ def likes(request, post_id):
     post.likes = current_likes
     post.save()
     return HttpResponseRedirect(reverse('post_detail', args=[post_id]))
+
 
 @login_required()
 def favourite(request, post_id):
