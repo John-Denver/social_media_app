@@ -109,6 +109,7 @@ def likes(request, post_id):
     user = request.user
     post = Post.objects.get(id=post_id)
     current_likes = post.likes
+
     # the post.likes above comes from models.py class Post which takes the variable likes
     # so like is associated to a post hence, post.likes
     liked = Likes.objects.filter(user=user, post=post).count()
@@ -136,3 +137,4 @@ def favourite(request, post_id):
     else:
         profile.favourite.add(post)
     return HttpResponseRedirect(reverse('post_detail', args=[post_id]))
+

@@ -22,7 +22,7 @@
       <!-- profile meta -->
       <div class="w-8/12 md:w-7/12 ml-4">
         <div class="md:flex md:flex-wrap md:items-center mb-4">
-          <h2 class="text-3xl inline-block font-light md:mr-2 mb-2 sm:mb-0">
+          <h2 class="text-3xl inline-block font-light md:mr-2 mb-2 sm:mb-0" style="color: var(--text-dark)">
               {{ profile.user }}
           </h2>
 
@@ -47,8 +47,8 @@
                         sm:inline-block block">UnFollow</a>
 
                       <a href="{% url 'new_message' profile.user %}" class="bg-gray-300 bg-opacity-70 px-2 py-1
-                        text-black font-semibold text-sm rounded block text-center
-                        sm:inline-block block ml-5">Message</a>
+                        font-semibold text-sm rounded block text-center
+                        sm:inline-block block ml-5" style="color: var(--text-dark)">Message</a>
                       {% else %}
           <a href="{% url 'follow' profile.user 1 %}" class="bg-blue-500 px-2 py-1
                         text-white font-semibold text-sm rounded block text-center
@@ -62,7 +62,7 @@
         </div>
 
         <!-- post, following, followers list for medium screens -->
-        <ul class="hidden md:flex space-x-8 mb-4">
+        <ul class="hidden md:flex space-x-8 mb-4" style="color: var(--text-dark)">
           <li>
             <span class="font-semibold">{{ post_count }}</span>
             posts
@@ -79,7 +79,7 @@
         </ul>
 
         <!-- user meta form medium screens -->
-        <div class="hidden md:block">
+        <div class="hidden md:block" style="color: var(--text-dark)">
           <h6 class="font-semibold">{{ profile.first_name }} {{ profile.last_name }}</h6>
             <p>{{ profile.bio }}</p>
             <a href="{{ profile.url }}" target="_blank" style="color: #1161ee">{{ profile.url }}</a><br>
@@ -102,7 +102,7 @@
 
       <!-- user following for mobile only -->
       <ul class="flex md:hidden justify-around space-x-8 border-t
-                text-center p-2 text-gray-600 leading-snug text-sm">
+                text-center p-2 leading-snug text-sm" style="color: var(--text-dark)">
         <li>
           <span class="font-semibold block">{{ post_count }}</span>
           posts
@@ -127,34 +127,34 @@
 
 
                 {% if url_name == "profile" %}
-                    <li class="md:border-t md:border-gray-700 md:-mt-px md:text-gray-700 font-weight-bold">
+                    <li class="md:border-t-4" style="color: var(--main_colour)">
                       <a class="inline-block p-3" href="{% url 'profile' profile.user %}">
-                        <i class="fas fa-th-large text-xl md:text-xs"></i>
-                        <span class="hidden md:inline">Posts</span>
+                        <i class="fas fa-th-large text-xl md:text-xs" style="color: var(--text-dark)"></i>
+                        <span class="hidden md:inline" style="color: var(--text-dark)">Posts</span>
                       </a>
                      </li>
                     {% else %}
-                    <li>
+                    <li style="color: var(--main_colour)">
                       <a class="inline-block p-3" href="{% url 'profile' profile.user %}">
-                        <i class="fas fa-th-large text-xl md:text-xs"></i>
-                        <span class="hidden md:inline">Posts</span>
+                        <i class="fas fa-th-large text-xl md:text-xs" style="color: var(--text-dark)"></i>
+                        <span class="hidden md:inline" style="color: var(--text-dark)">Posts</span>
                       </a>
                      </li>
                  {% endif %}
 
 
           {% if url_name == "favourite" %}
-            <li class="md:border-t md:border-gray-700 md:-mt-px md:text-gray-700 font-weight-bold">
+            <li class="md:border-t-4" style="color: var(--main_colour)">
               <a class="inline-block p-3" href="{% url 'favourite' profile.user %}">
-                <i class="far fa-bookmark text-xl md:text-xs"></i>
-                <span class="hidden md:inline">Saved</span>
+                <i class="far fa-bookmark text-xl md:text-xs" style="color: var(--text-dark)"></i>
+                <span class="hidden md:inline" style="color: var(--text-dark)">Saved</span>
               </a>
             </li>
               {% else %}
-              <li>
+              <li style="color: var(--main_colour)">
               <a class="inline-block p-3" href="{% url 'favourite' profile.user %}">
-                <i class="far fa-bookmark text-xl md:text-xs"></i>
-                <span class="hidden md:inline">Saved</span>
+                <i class="far fa-bookmark text-xl md:text-xs" style="color: var(--text-dark)"></i>
+                <span class="hidden md:inline" style="color: var(--text-dark)">Saved</span>
               </a>
             </li>
           {% endif %}
@@ -162,8 +162,8 @@
         <li>
           <a class="inline-block p-3" href="#">
             <i class="fas fa-user border border-gray-500
-                             px-1 pt-1 rounded text-xl md:text-xs"></i>
-            <span class="hidden md:inline">tagged</span>
+                             px-1 pt-1 rounded text-xl md:text-xs" style="color: var(--text-dark)"></i>
+            <span class="hidden md:inline" style="color: var(--text-dark)">tagged</span>
           </a>
         </li>
       </ul>
@@ -172,7 +172,7 @@
 
         <!-- column -->
           {% if post_count == 0 %}
-              <h1 style="font-weight: bolder; margin-left: 40%; padding-top: 50px">No Posts Yet
+              <h1 style="color: var(--text-dark); font-weight: bolder; margin-left: 40%; padding-top: 50px">No Posts Yet
               <i class="fas fa-face-frown fa-2xl
                              px-1 pt-1"></i>
               </h1>

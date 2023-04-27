@@ -36,8 +36,8 @@ textarea {
   --nav-height: 44px;
 }
 :root.darkTheme {
-  --primary: hsl(0, 0%, 0%);
-  --secondary: hsl(0, 0%, 2%);
+  --primary: hsl(0, 0%, 100%);
+  --secondary: hsl(0, 0%, 96%);
   --border: hsl(0, 0%, 15%);
 
   --story-border: hsl(0, 0%, 44%);
