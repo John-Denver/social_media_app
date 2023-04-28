@@ -25,6 +25,10 @@ from comment.models import *
 from comment.views import *
 from chatting.views import *
 
+admin.site.site_header = "Insta admin"
+admin.site.site_title = "Insta admin site"
+admin.site.index_title = "Insta Administration"
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('post.urls')),
@@ -46,10 +50,8 @@ urlpatterns = [
 
     # path('<username>/edit_profile', edit_profile, name="edit_profile"),
 
-
     #  Chatting/messaging section urls
     # path('direct/<username>/', chats, name="chats"),
-
 
 ]
 

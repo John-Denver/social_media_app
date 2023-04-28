@@ -73,9 +73,6 @@ img { max-width: 100%; }
     top: 0; left: 0;
     z-index: 2;
 }
-.iconic {
-    color: red;
-}
 
 .header::after {
     content: '';

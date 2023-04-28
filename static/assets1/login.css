@@ -1,46 +1,54 @@
 * {
-  margin: 0px;
-  padding: 0px;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  background-color: var(--main_colour);
 }
 
 
-#main-wrapper {
-  width: 70%;
-  height: 50%;
-  overflow: hidden;
-  border: 0px solid #000;
-  margin: 10% auto;
-  padding: 10px;
-}
+/*#main-wrapper {*/
+/*  width: 70%;*/
+/*  height: 50%;*/
+/*  overflow: hidden;*/
+/*  border: var(--border);*/
+/*  margin: 10% auto;*/
+/*  padding: 10px;*/
+/*  background-color: var(--main_colour);*/
+
+/*}*/
 
 .main-content {
-  width: 69%;
-  height: 40%;
-  margin: 10px auto;
-  background-color: #fff;
-  border: 2px solid #e6e6e6;
+  width: max-content;
+  min-width: 70vw;
+  margin-top: 10%;
+  margin-left: auto;
+  margin-right: auto;
+  background-color: var(--main_colour);
+  border: 2px solid var(--border);
   padding: 40px 50px;
 }
 
 .logo {
-  border: 0px solid #000;
+  border: var(--border);
   margin-bottom: 5px;
+  margin-left: 40%;
 }
 
-.logo img {
-  height: 50px;
-  width: 175px;
-  margin: auto;
-  position: relative;
-  left: 40px;
-}
+/*.logo img {*/
+/*  height: 50px;*/
+/*  width: 175px;*/
+/*  margin: auto;*/
+/*  position: relative;*/
+/*  left: 40px;*/
+/*  color: var(--text-dark);*/
+/*}*/
 
 .input-1,
 .input-2 {
   width: 100%;
   margin-bottom: 5px;
   padding: 8px 12px;
-  border: 1px solid #dbdbdb;
+  border: 1px solid var(--border);
   box-sizing: border-box;
   border-radius: 3px;
 }
@@ -72,20 +80,25 @@
 }
 
 .sub-content {
-  width: 250px;
-  height: 40%;
+  width: max-content;
+  height: auto;
   margin: 10px auto;
   border: 1px solid #e6e6e6;
   padding: 20px 50px;
-  background-color: #fff;
+  background-color: var(--main_colour);
 }
 
+.l-part{
+  color: var(--text-dark);
+}
 .s-part {
   text-align: center;
   font-family: 'Overpass Mono', monospace;
   word-spacing: -3px;
   letter-spacing: -2px;
   font-weight: normal;
+  color: var(--text-dark);
+
 }
 
 .s-part a {
@@ -99,6 +112,6 @@
 }
 
 input:focus {
-    background-color: yellow;
+    background-color: var(--text-dark);
 }
 
