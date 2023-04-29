@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from django.shortcuts import render, redirect, get_object_or_404
 
 from comment.forms import CommentForm
@@ -16,6 +17,9 @@ from comment.models import Comment
 @login_required()
 def index(request):
     user = request.user  # get logged in user
+    all_users = User.objects.all()
+    profile = Profile.objects.all()
+
     posts = Stream.objects.filter(user=user)  # stream from models, this line gets posts of current logged-in user
     group_ids = []
     for post in posts:
@@ -25,6 +29,8 @@ def index(request):
     post_items = Post.objects.filter(id__in=group_ids).all().order_by('-posted')
     context = {
         'post_items': post_items,
+        'all_users': all_users,
+        'profile': profile,
     }
     return render(request, 'index.html', context)
 

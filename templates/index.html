@@ -206,17 +206,28 @@
               <button>See All</button>
             </div>
 
-              {% for users in user_username %}
+              {% for user in all_users %}
             <div class="side-menu__suggestions-content">
               <div class="side-menu__suggestion">
-                <a href="#" class="side-menu__suggestion-avatar">
-                  <img src="{% static 'assets1/default-user.png' %}" alt="User Picture" />
-                </a>
+
+                   {% if user.profile.image %}
+                        <a href="{% url 'profile' user.username %}" class="side-menu__suggestion-avatar">
+                          <img src="{{user.profile.image.url}}" alt="User Picture" />
+                        </a>
+                   {% else %}
+                       <a href="{% url 'profile' user.username %}" class="side-menu__suggestion-avatar">
+                          <img src="{% static 'assets1/default-user.png' %}" alt="User Picture" />
+                        </a>
+                   {% endif %}
+
+
                 <div class="side-menu__suggestion-info">
-                  <a href="#">{{ user_username.username }}</a>
-                  <span>Followed by user1, user2 and 9 others</span>
+                  <a href="{% url 'profile' user.username %}">{{ user.profile.first_name }} {{ user.profile.last_name }}</a>
+                  <span>@{{ user.username }}</span>
                 </div>
-                <button class="side-menu__suggestion-button">Follow</button>
+
+                <a href="{% url 'follow' user 1 %}" class="side-menu__suggestion-button">Follow</a>
+
               </div>
             </div>
                {% endfor %}
