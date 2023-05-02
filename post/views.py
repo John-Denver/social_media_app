@@ -1,3 +1,5 @@
+import json
+
 from django.contrib.auth.models import User
 from django.shortcuts import render, redirect, get_object_or_404
 
@@ -5,7 +7,7 @@ from comment.forms import CommentForm
 from post.models import Tag, Post, Stream, Follow, Likes
 from django.contrib.auth.decorators import login_required
 from post.forms import NewPostForm
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, JsonResponse, HttpResponse
 from django.urls import reverse
 from userauth.models import Profile
 from comment.models import Comment
@@ -119,6 +121,7 @@ def likes(request, post_id):
     # the post.likes above comes from models.py class Post which takes the variable likes
     # so like is associated to a post hence, post.likes
     liked = Likes.objects.filter(user=user, post=post).count()
+
     if not liked:
         liked = Likes.objects.create(user=user, post=post)
         current_likes = current_likes + 1
@@ -126,10 +129,14 @@ def likes(request, post_id):
     else:
         liked = Likes.objects.filter(user=user, post=post).delete()
         current_likes = current_likes - 1
-
+    resp = {
+        'liked': liked
+    }
+    response = json.dumps(resp)
     post.likes = current_likes
     post.save()
-    return HttpResponseRedirect(reverse('post_detail', args=[post_id]))
+    return HttpResponse(response, content_type="application/json")
+    # return HttpResponseRedirect(reverse('post_detail', args=[post_id]))
 
 
 @login_required()
@@ -143,4 +150,3 @@ def favourite(request, post_id):
     else:
         profile.favourite.add(post)
     return HttpResponseRedirect(reverse('post_detail', args=[post_id]))
-

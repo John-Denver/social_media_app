@@ -114,7 +114,7 @@
                 <div class="post__buttons">
 
                   <a href="{% url 'like' post.id %}" class="post__button">
-                    {% if post.likes %}
+                     {% if has_been_liked %}
                     <i class="fa fa-heart" style="color: red; font-size: 27px;"></i>
                           {% else %}
                           <i class="fa-regular fa-heart" style="color: black; font-size: 27px;"></i>
