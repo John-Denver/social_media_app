@@ -11,41 +11,31 @@ def user_directory_path(instance, filename):
     return 'user_{0}/{1}'.format(instance.user.id, filename)
 
 
-# the way instagram has hashtags.....here is the code
 class Tag(models.Model):
-    title = models.CharField(max_length=100, verbose_name="Tag")
-    slug = models.SlugField(null=False, unique=True, default=uuid.uuid1)
-
-    class Meta:
-        verbose_name = 'Tag'
-        verbose_name_plural = 'Tags'
-
-    # when a user clicks on a Tag/hashtag it should take him to a page that has other posts with the same tag/hashtag
-    # code for that below
-
-    # def get_absolute_url(self):
-    #     return reverse('tags', args=[self.slug])
-
-    def __str__(self):
-        return self.title
+    name = models.CharField(max_length=50)
+    slug = models.SlugField(max_length=100, unique=True)
 
     def save(self, *args, **kwargs):
-        if not self.slug:
-            self.slug - slugify(self.slug)
-        return super().save(*args, **kwargs)
+        self.slug = slugify(self.name)
+        super(Tag, self).save(*args, **kwargs)
+
+    def __str__(self):
+        return self.name
 
 
 class Post(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=True)
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     picture = models.ImageField(upload_to=user_directory_path, verbose_name="picture")
     caption = models.CharField(max_length=10000, verbose_name="caption")
-    posted = models.DateField(auto_now_add=True)
-    tag = models.ManyToManyField(Tag, related_name="tags", blank=True)
+    posted = models.DateTimeField(auto_now_add=True)
+    tags = models.ManyToManyField(Tag, blank=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    likes = models.IntegerField(default=0)
+    likes = models.ManyToManyField(User, related_name='post_likes', blank=True)
 
-    def get_absolute_url(self):
-        return reverse("post_detail", args=[str(self.id)])
+    # likes = models.IntegerField(default=0)
+
+    # def get_absolute_url(self):
+    #     return reverse("post_detail", args=[str(self.id)])
 
     def __str__(self):
         return str(self.caption)
@@ -74,9 +64,32 @@ class Stream(models.Model):
             stream.save()
 
 
-class Likes(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="user_likes")
-    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name="post_likes")
+# class Likes(models.Model):
+#     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="likes")
+#     post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name="likes")
 
 
 post_save.connect(Stream.add_post, sender=Post)
+
+# # the way instagram has hashtags.....here is the code
+# class Tag(models.Model):
+#     title = models.CharField(max_length=100, verbose_name="Tag")
+#     slug = models.SlugField(null=False, unique=True, default=uuid.uuid1)
+#
+#     class Meta:
+#         verbose_name = 'Tag'
+#         verbose_name_plural = 'Tags'
+#
+#     # when a user clicks on a Tag/hashtag it should take him to a page that has other posts with the same tag/hashtag
+#     # code for that below
+#
+#     # def get_absolute_url(self):
+#     #     return reverse('tags', args=[self.slug])
+#
+#     def __str__(self):
+#         return self.title
+#
+#     def save(self, *args, **kwargs):
+#         if not self.slug:
+#             self.slug - slugify(self.slug)
+#         return super().save(*args, **kwargs)

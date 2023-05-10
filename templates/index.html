@@ -113,13 +113,31 @@
               <div class="post__footer">
                 <div class="post__buttons">
 
-                  <a href="{% url 'like' post.id %}" class="post__button">
-                     {% if has_been_liked %}
-                    <i class="fa fa-heart" style="color: red; font-size: 27px;"></i>
-                          {% else %}
-                          <i class="fa-regular fa-heart" style="color: black; font-size: 27px;"></i>
-                      {% endif %}
-                  </a>
+
+{#                  <a href="{% url 'like' %}" class="post__button like" id="{{ post.id }}" id="likebtn{{ post.id }}">#}
+
+                    {#                  <a href="{% url 'like' post.id %}" class="post__button like" id="likebtn{{ post.id }}">#}
+{#                     {% if liked %}#}
+{#                    <i class="fa fa-heart {{ post.id }}" style="color: red; font-size: 27px;"></i>#}
+{#                          {% else %}#}
+{#                          <i class="fa-regular fa-heart {{ post.id }}" style="color: black; font-size: 27px;"></i>#}
+{#                      {% endif %}#}
+{#                  </a>#}
+                <form method="post">
+                    {% csrf_token %}
+                        <button type="submit" class="like-btn" data-post-id="{{ post.id }}">
+                            {% if request.user in post.likes.all %}
+                                Unlike
+                            {% else %}
+                                Like
+                            {% endif %}
+                        </button>
+                </form>
+                <script>
+
+                </script>
+
+
 
                     {# Comment icon #}
                   <a href="" class="post__button">
@@ -157,7 +175,7 @@
 
                     <span
                       >
-                      <a class="post__name--underline" href="#">{{ post.likes }} Likes</a>
+                      <a class="post__name--underline" href="#">{{ post.likes.count }} Likes</a>
                       </span
                     >
                   </div>
@@ -170,12 +188,15 @@
                   </div>
 
                     <span class="">
-                        {% for tag in post.tag.all %}
-                            <a href="{{ tag.get_absolute_url }}" style="text-decoration: none">#{{ tag }}</a>
+{#                        {% for tag in post.tags.all %}#}
+{#                            <a href="{{ tag.get_absolute_url }}" style="text-decoration: none">#{{ tag }}</a>#}
+{#                        {% endfor %}#}
+                        {% for tag in post.tags.all %}
+                           <a href="{% url 'tag-detail' slug=tag.slug %}">#{{ tag.name }}</a>
                         {% endfor %}
                     </span>
 
-                  <span class="post__date-time">{{ post.posted }}</span>
+                  <span class="post__date-time">{{ post.posted|timesince }} ago</span>
                 </div>
               </div>
             </article>
@@ -379,3 +400,29 @@
     </nav>
 
 {% endblock content %}
+
+{% block jsfiles %}
+
+<script>
+
+</script>
+{% endblock jsfiles %}
+
+{##}
+{#                    <form method="post" id="task-form">#}
+{#                        {% if post.likes %}#}
+{#                            <a href="{% url 'like' post.id %}" style="color: red" id="likebtn{{ post.id }}">#}
+{#                                 <button type="submit" id="likebtn">#}
+{#                                          Unlike#}
+{#                                        | {{post.likes.count}}#}
+{#                                 </button>#}
+{#                            </a>#}
+{#                        {% else %}#}
+{#                            <a href="{% url 'like' post.id %}" style="color: red" id="likebtn{{ post.id }}">#}
+{#                                 <button type="submit" id="likebtn">#}
+{#                                          like#}
+{#                                        | {{post.likes.count}}#}
+{#                                 </button>#}
+{#                                </a>#}
+{#                        {% endif %}#}
+{#                    </form>#}

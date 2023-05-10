@@ -1,6 +1,12 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block content %}
+    <h1>Tags</h1>
+    <ul>
+        {% for tag in tags %}
+            <li><a href="{% url 'tag-detail' tag.slug %}">{{ tag.name }} ({{ tag.post_set.count }})</a></li>
+        {% endfor %}
+    </ul>
 
 
 {% endblock %}

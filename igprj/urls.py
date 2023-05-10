@@ -18,6 +18,7 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 
+import post
 from userauth.models import Profile
 from userauth.views import *
 

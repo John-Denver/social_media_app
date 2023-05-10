@@ -1,10 +1,11 @@
 import json
+import uuid
 
 from django.contrib.auth.models import User
 from django.shortcuts import render, redirect, get_object_or_404
 
 from comment.forms import CommentForm
-from post.models import Tag, Post, Stream, Follow, Likes
+from post.models import Tag, Post, Stream, Follow
 from django.contrib.auth.decorators import login_required
 from post.forms import NewPostForm
 from django.http import HttpResponseRedirect, JsonResponse, HttpResponse
@@ -21,6 +22,7 @@ def index(request):
     user = request.user  # get logged in user
     all_users = User.objects.all()
     profile = Profile.objects.all()
+    tags = Tag.objects.all()
 
     posts = Stream.objects.filter(user=user)  # stream from models, this line gets posts of current logged-in user
     group_ids = []
@@ -29,10 +31,12 @@ def index(request):
     # -posted gives results of the latest post at the top while posted the latest result is at the bottom
     # posted is a string but references posted in models.py
     post_items = Post.objects.filter(id__in=group_ids).all().order_by('-posted')
+
     context = {
         'post_items': post_items,
         'all_users': all_users,
         'profile': profile,
+        'tags': tags,
     }
     return render(request, 'index.html', context)
 
@@ -48,14 +52,14 @@ def new_post(request):
             picture = form.cleaned_data.get('picture')
             caption = form.cleaned_data.get('caption')
             tag_form = form.cleaned_data.get('tag')
-            tags_list = list(tag_form.split(','))
+            tags_list = list(str(tag_form).split(','))
             # when user puts a comma the above code will know that now it's a different hashtag being put
 
             for tag in tags_list:
-                t, created = Tag.objects.get_or_create(title=tag)
+                t, created = Tag.objects.get_or_create(name=tag)
                 tags_objs.append(t)
             p, created = Post.objects.get_or_create(picture=picture, caption=caption, user_id=user)
-            p.tag.set(tags_objs)
+            p.tags.set(tags_objs)
             p.save()
             # return and execute the function named index
             return redirect('index')
@@ -99,44 +103,104 @@ def post_detail(request, post_id):
         return render(request, 'post-detail.html', context)
 
 
+# @login_required()
+# def tags(request, tag_slug):
+#     tag = get_object_or_404(Tag, slug=tag_slug)
+#     posts = Post.objects.filter(tag=tag).order_by('-posted')
+#
+#     context = {
+#         'tag': tag,
+#         'posts': posts
+#     }
+#
+#     return render(request, 'hashtags.html', context)
 @login_required()
-def tags(request, tag_slug):
-    tag = get_object_or_404(Tag, slug=tag_slug)
-    posts = Post.objects.filter(tag=tag).order_by('-posted')
-
-    context = {
-        'tag': tag,
-        'posts': posts
-    }
-
-    return render(request, 'hashtags.html', context)
+def tag_list(request):
+    tags = Tag.objects.all()
+    return render(request, 'hashtags.html', {'tags': tags})
 
 
-@login_required()
-def likes(request, post_id):
-    user = request.user
-    post = Post.objects.get(id=post_id)
-    current_likes = post.likes
+def tag_detail(request, slug):
+    tag = get_object_or_404(Tag, slug=slug)
+    posts = tag.post_set.all()
+    return render(request, 'tag_detail.html', {'tag': tag, 'posts': posts})
 
-    # the post.likes above comes from models.py class Post which takes the variable likes
-    # so like is associated to a post hence, post.likes
-    liked = Likes.objects.filter(user=user, post=post).count()
 
-    if not liked:
-        liked = Likes.objects.create(user=user, post=post)
-        current_likes = current_likes + 1
+@login_required
+def like_post(request):
+    post_id = request.POST.get('post_id')
+    action = request.POST.get('action')
+    if post_id and action:
+        try:
+            post = get_object_or_404(Post, id=post_id)
+            if action == 'like':
+                user = request.user
+                post.likes.add(user=user)
+            else:
+                user = request.user
+                post.likes.remove(user=user)
+            return JsonResponse({'status': 'ok'})
+        except:
+            pass
+    return JsonResponse({'status': 'error'})
 
-    else:
-        liked = Likes.objects.filter(user=user, post=post).delete()
-        current_likes = current_likes - 1
-    resp = {
-        'liked': liked
-    }
-    response = json.dumps(resp)
-    post.likes = current_likes
-    post.save()
-    return HttpResponse(response, content_type="application/json")
-    # return HttpResponseRedirect(reverse('post_detail', args=[post_id]))
+
+# @login_required()
+# def likes(request, post_id):
+#     post_id = request.GET.get("likeId", post_id)
+#     user = request.user
+#     post = Post.objects.get(pk=post_id)
+#     current_likes = post.likes
+#
+#     # the post.likes above comes from models.py class Post which takes the variable likes
+#     # so like is associated to a post hence, post.likes
+#     # liked = Likes.objects.filter(user=user, post=post).count()
+#     liked = False
+#     like = Likes.objects.filter(user=user, post=post)
+#     if like:
+#         like.delete()
+#     else:
+#         liked = True
+#         Likes.objects.create(user=user, post=post)
+#     resp = {
+#         'liked': liked
+#     }
+#     response = json.dumps(resp)
+#     return HttpResponse(response, content_type="application/json")
+
+# @login_required()
+# def likes(request, post_id):
+#     user = request.user
+#     post = Post.objects.get(id=post_id)
+#     current_likes = post.likes
+#
+#     # the post.likes above comes from models.py class Post which takes the variable likes
+#     # so like is associated to a post hence, post.likes
+#     # liked = Likes.objects.filter(user=user, post=post).count()
+#     liked = False
+#     like = Likes.objects.filter(user=user, post=post)
+#     if like:
+#         like.delete()
+#     else:
+#         liked = True
+#         Likes.objects.create(user=user, post=post)
+#     resp = {
+#         'liked': liked
+#     }
+#     response = json.dumps(resp)
+#     return HttpResponse(response, content_type="application/json")
+
+# if not liked:
+#     liked = Likes.objects.create(user=user, post=post)
+#     current_likes = current_likes + 1
+#
+# else:
+#     liked = Likes.objects.filter(user=user, post=post).delete()
+#     current_likes = current_likes - 1
+#
+# post.likes = current_likes
+# post.save()
+# return HttpResponseRedirect(reverse('post_detail', args=[post_id]))
 
 
 @login_required()

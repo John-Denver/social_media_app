@@ -1,4 +1,7 @@
 // Elements
+var j = jQuery.noConflict();
+j(function() {
+
 const toggleThemeBtn = document.querySelector('.header__theme-button');
 const storiesContent = document.querySelector('.stories__content');
 const storiesLeftButton = document.querySelector('.stories__left-button');
@@ -190,3 +193,61 @@ postsContent.forEach((post) => {
             });
 
         });
+
+
+$(document).ready(function(){
+    $('.like-btn').click(function(){
+        var post_id = $(this).attr('data-post-id');
+        var action = $(this).text().trim() === 'Like' ? 'like' : 'unlike';
+        var csrftoken = $('input[name=csrfmiddlewaretoken]').val(); // Get the CSRF token
+
+        $.ajax({
+            type: 'POST',
+            url: 'like-post/',
+            data: {
+                'post_id': post_id,
+                'action': action,
+                'csrfmiddlewaretoken': csrftoken // Add the CSRF token to the data
+            },
+            dataType: 'json',
+            beforeSend: function(xhr, settings) { // Set the CSRF token in the headers
+                xhr.setRequestHeader('X-CSRFToken', csrftoken);
+            },
+            success: function(response){
+                if (response['status'] === 'ok') {
+                    location.reload();
+                }
+            },
+            error: function(response){
+                console.log(response);
+            }
+        });
+    });
+});
+
+
+});
+
+//
+// $(".like").click(function (e) {
+//   var id = id;
+//   var href = $(".like").find("a").attr("href");
+//   e.preventDefault();
+//
+//   $.ajax({
+//     url: href,
+//     data: {
+//       likeId: id,
+//     },
+//     success: function (response) {
+//       if (response.liked) {
+//         // $("#likebtn" + id).html("Unlike");
+//         $("#likebtn"+id).css("color", "red");
+//       } else {
+//         // $("#likebtn" + id).html("Like");
+//         $("#likebtn"+id).css("color", "black");
+//       }
+//        setInterval('data.reload()', 1000);
+//     },
+//   });
+// });
