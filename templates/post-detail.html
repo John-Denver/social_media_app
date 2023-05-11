@@ -1,5 +1,10 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load my_filters %}
+{# i have hard coded the "load my_filters" inside django templatetags and added a file "my_filters.py" #}
+{# The my_filters.py has the function timesince_hours #}
+{#the django templatetags are in the directory External Libraries\Python311\Lib\site-packages\django\templatetags\my_filters.py#}
+{#and you can't see the my_filters.py file but it is there. You can type the path and it will appear#}
 {% block content %}
 
 
@@ -103,13 +108,18 @@
 
                 <div class="post__infos">
                   <div class="post__likes">
-                    <a href="#" class="post__likes-avatar">
-                      <img src="{{ user.profile.image.url }}" alt="User Picture" />
-                    </a>
-
+                      {% if user.profile.image %}
+                            <a href="#" class="post__likes-avatar">
+                              <img src="{{ user.profile.image.url }}" alt="User Picture" />
+                            </a>
+                      {% else %}
+                           <a href="#" class="post__likes-avatar">
+                              <img src="{% static 'assets1/default-user.png' %}" alt="User Picture" />
+                           </a>
+                      {% endif %}
                     <span
                       >
-                      <a class="post__name--underline" href="#">{{ post.likes }} Likes</a>
+                      <a class="post__name--underline" href="#">{{ post.likes.count }} Likes</a>
                       </span
                     >
                   </div>
@@ -122,12 +132,12 @@
                   </div>
 
                     <span class="">
-                        {% for tag in post.tag.all %}
-                            <a href="{{ tag.get_absolute_url }}" style="text-decoration: none">#{{ tag }}</a>
+                        {% for tag in post.tags.all %}
+                           <a href="{% url 'tag-detail' slug=tag.slug %}">#{{ tag.name }}</a>
                         {% endfor %}
                     </span>
 
-                  <span class="post__date-time">{{ post.posted }}</span>
+                  <span class="post__date-time">{{ post.posted|timesince_hours }} ago</span>
                 </div>
 
 

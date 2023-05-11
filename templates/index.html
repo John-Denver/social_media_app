@@ -1,5 +1,11 @@
 {% extends 'base.html' %}
+{% load my_filters %}
+{# i have hard coded the "load my_filters" inside django templatetags and added a file "my_filters.py" #}
+{# The my_filters.py has the function timesince_hours #}
+{#the django templatetags are in the directory External Libraries\Python311\Lib\site-packages\django\templatetags\my_filters.py#}
+{#and you can't see the my_filters.py file but it is there. You can type the path and it will appear#}
 {% load static %}
+
 {% block content %}
 
 
@@ -196,7 +202,7 @@
                         {% endfor %}
                     </span>
 
-                  <span class="post__date-time">{{ post.posted|timesince }} ago</span>
+                  <span class="post__date-time">{{ post.posted|timesince_hours }} ago</span>
                 </div>
               </div>
             </article>
