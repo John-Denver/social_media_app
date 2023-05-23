@@ -49,7 +49,9 @@ INSTALLED_APPS = [
     'comment',
     'chatting',
     'users',
+    'stories',
     'corsheaders',
+
     # the above is Cross-Origin Resource Sharing to allow request and prevent 403 error
 ]
 

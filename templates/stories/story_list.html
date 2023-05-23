@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h1>Stories</h1>
+  {% for story in stories %}
+    <div class="card mb-3">
+      <div class="card-body">
+        <h2 class="card-title">{{ story.title }}</h2>
+        {% if story.image %}
+          <img src="{{ story.image.url }}" class="card-img-top" alt="{{ story.title }}">
+        {% endif %}
+        <p class="card-text">{{ story.content }}</p>
+        <a href="{% url 'story_detail' story.pk %}" class="btn btn-primary">Read more</a>
+      </div>
+      <div class="card-footer text-muted">
+        Posted on {{ story.created_at }} by {{ story.user.username }}
+      </div>
+    </div>
+  {% empty %}
+    <p>No stories found.</p>
+  {% endfor %}
+{% endblock %}

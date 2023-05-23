@@ -48,15 +48,6 @@ def user_profile(request, username):
     return render(request, 'profile.html', context)
 
 
-# def user_urls(request, username):
-#     post_profile = Profile.objects.get()
-#
-#     context = {
-#         'post_profile': post_profile,
-#     }
-#     return render(request, 'post-detail.html', context)
-
-
 # The option is going to help track if a user is following a user or not
 @login_required()
 def follow(request, username, option):

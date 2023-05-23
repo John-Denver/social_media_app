@@ -20,4 +20,6 @@ urlpatterns = [
     path('like-post/', views.like_post, name='like_post'),
     path('<uuid:post_id>/favourite', views.favourite, name="post-favourite"),
 
+    path('story_detail/', views.story_detail, name='story_detail'),
+
 ]

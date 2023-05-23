@@ -11,6 +11,10 @@ def user_directory_path(instance, filename):
     return 'user_{0}/{1}'.format(instance.user.id, filename)
 
 
+def story_directory_path(instance, filename):
+    return 'story_{0}/{1}'.format(instance.user.id, filename)
+
+
 class Tag(models.Model):
     name = models.CharField(max_length=50)
     slug = models.SlugField(max_length=100, unique=True)
@@ -71,25 +75,15 @@ class Stream(models.Model):
 
 post_save.connect(Stream.add_post, sender=Post)
 
-# # the way instagram has hashtags.....here is the code
-# class Tag(models.Model):
-#     title = models.CharField(max_length=100, verbose_name="Tag")
-#     slug = models.SlugField(null=False, unique=True, default=uuid.uuid1)
 #
-#     class Meta:
-#         verbose_name = 'Tag'
-#         verbose_name_plural = 'Tags'
-#
-#     # when a user clicks on a Tag/hashtag it should take him to a page that has other posts with the same tag/hashtag
-#     # code for that below
-#
-#     # def get_absolute_url(self):
-#     #     return reverse('tags', args=[self.slug])
+# class Story(models.Model):
+#     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+#     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="story")
+#     title = models.CharField(max_length=255)
+#     content = models.TextField(blank=True, null=True)
+#     image = models.ImageField(upload_to=story_directory_path, null=True, blank=True)
+#     created_at = models.DateTimeField(auto_now_add=True)
+#     updated_at = models.DateTimeField(auto_now=True)
 #
 #     def __str__(self):
 #         return self.title
-#
-#     def save(self, *args, **kwargs):
-#         if not self.slug:
-#             self.slug - slugify(self.slug)
-#         return super().save(*args, **kwargs)

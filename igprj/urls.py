@@ -36,6 +36,7 @@ urlpatterns = [
     path('users/', include('userauth.urls')),
     path('message/', include('chatting.urls')),
     path('authorize/', include('users.urls')),
+    path('stories/', include('stories.urls')),
 
     #     Profile page urls
 

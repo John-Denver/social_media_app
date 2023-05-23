@@ -22,6 +22,8 @@
     <orderEntry type="library" name="tailwindcss" level="application" />
     <orderEntry type="library" name="jquery-3.2.1.slim" level="application" />
     <orderEntry type="library" name="popper.js" level="application" />
+    <orderEntry type="library" name="zuck.js" level="application" />
+    <orderEntry type="library" name="bulma" level="application" />
   </component>
   <component name="TemplatesService">
     <option name="TEMPLATE_CONFIGURATION" value="Django" />

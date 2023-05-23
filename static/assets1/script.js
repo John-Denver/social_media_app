@@ -194,6 +194,63 @@ postsContent.forEach((post) => {
 
         });
 
+// Stories slider
+  $(document).ready(function() {
+    $('.showModal').click(function(event) {
+      var storyid = event.currentTarget.name;
+
+      $('.carousel-inner').empty(); // Clear the existing slides
+
+      $.ajax({
+        type: 'GET',
+        url: 'http://127.0.0.1:8000/stories/showmedia/' + storyid,
+        dataType: 'json',
+        success: function(data) {
+          $.each(data, function(i, v) {
+            var div_slides_html;
+            if (v.content.slice(v.content.length - 3) === 'mp4') {
+              div_slides_html = '<div class="mySlides"><video width="640" controls="controls" preload="metadata"><source src="/media/' + v.content + '#t=0.5" type="video/mp4"></video></div>';
+            } else {
+              div_slides_html = '<div class="mySlides"><img src="/media/' + v.content + '" style="width:70%" alt=""><div class="text">' + v.caption + '</div></div>';
+            }
+            // $('#jsondata').append(div_slides_html);
+             $('.carousel-inner').append(div_slides_html);
+          });
+          showSlides(slideIndex); // Call showSlides after appending the slides
+        }
+      });
+    });
+  });
+
+// function plusSlides(n) {
+//   showSlides(slideIndex += n);
+// }
+//
+// // Thumbnail image controls
+// function currentSlide(n) {
+//   showSlides(slideIndex = n);
+// }
+
+function showSlides(n) {
+
+  var i;
+  var slides = document.getElementsByClassName("mySlides");
+
+  if (n > slides.length) {
+    slideIndex = 1
+  }
+
+  if (n < 1) {
+    slideIndex = slides.length
+  }
+
+  for (i = 0; i < slides.length; i++) {
+      slides[i].style.display = "none";
+  }
+
+  slides[slideIndex-1].style.display = "block";
+}
+
 
 $(document).ready(function(){
     $('.like-btn').click(function(){

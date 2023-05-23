@@ -1,11 +1,13 @@
 import json
-import uuid
+from itertools import groupby
 
 from django.contrib.auth.models import User
 from django.shortcuts import render, redirect, get_object_or_404
 
 from comment.forms import CommentForm
 from post.models import Tag, Post, Stream, Follow
+from stories.models import Story, StoryStream
+
 from django.contrib.auth.decorators import login_required
 from post.forms import NewPostForm
 from django.http import HttpResponseRedirect, JsonResponse, HttpResponse
@@ -24,6 +26,12 @@ def index(request):
     profile = Profile.objects.all()
     tags = Tag.objects.all()
 
+    stories = StoryStream.objects.filter(user=user)
+
+    # The story field is the related name for the foreign key relationship between Story and User models.
+    # It specifies how to access Story objects from a User object.
+    # "story__null=False" The "story" comes from the related name of the user in Story Model
+
     posts = Stream.objects.filter(user=user)  # stream from models, this line gets posts of current logged-in user
     group_ids = []
     for post in posts:
@@ -37,8 +45,20 @@ def index(request):
         'all_users': all_users,
         'profile': profile,
         'tags': tags,
+        'stories': stories,
     }
     return render(request, 'index.html', context)
+
+
+@login_required()
+def story_detail(request):
+    user = request.user  # get logged in user
+    stories = StoryStream.objects.filter(user=user)
+
+    context = {
+        'stories': stories,
+    }
+    return render(request, 'stories/story_detail.html', context)
 
 
 @login_required()
@@ -74,6 +94,8 @@ def new_post(request):
         return render(request, 'newpost.html', context)
 
 
+
+
 @login_required()
 def post_detail(request, post_id):
     post = get_object_or_404(Post, id=post_id)
@@ -103,17 +125,6 @@ def post_detail(request, post_id):
         return render(request, 'post-detail.html', context)
 
 
-# @login_required()
-# def tags(request, tag_slug):
-#     tag = get_object_or_404(Tag, slug=tag_slug)
-#     posts = Post.objects.filter(tag=tag).order_by('-posted')
-#
-#     context = {
-#         'tag': tag,
-#         'posts': posts
-#     }
-#
-#     return render(request, 'hashtags.html', context)
 @login_required()
 def tag_list(request):
     tags = Tag.objects.all()
@@ -214,3 +225,4 @@ def favourite(request, post_id):
     else:
         profile.favourite.add(post)
     return HttpResponseRedirect(reverse('post_detail', args=[post_id]))
+
