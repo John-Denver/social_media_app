@@ -195,7 +195,24 @@ postsContent.forEach((post) => {
         });
 
 // Stories slider
+function togglePlay(videoId) {
+  var video = document.getElementById('video-' + videoId);
+  if (video.paused || video.ended) {
+    video.play();
+  } else {
+    video.pause();
+  }
+}
 
+
+function toggleMute(videoId) {
+  var video = document.getElementById('video-' + videoId);
+  if (video.muted) {
+    video.muted = false;
+  } else {
+    video.muted = true;
+  }
+}
 // $(document).ready(function() {
 //   $('.showModal').click(function(event) {
 //     var storyid = event.currentTarget.name;

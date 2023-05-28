@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load my_filters %}
 {# i have hard coded the "load my_filters" inside django templatetags and added a file "my_filters.py" #}
-{# The my_filters.py has the function timesince_hours #}
+{# The my_filters.py has the function timesince_hours and ends_with(for the mp4 file type) #}
 {#the django templatetags are in the directory External Libraries\Python311\Lib\site-packages\django\templatetags\my_filters.py#}
 {#and you can't see the my_filters.py file but it is there. You can type the path and it will appear#}
 {% load static %}
@@ -21,7 +21,7 @@
       </div>
       <div class="modal-body">
         <!-- Carousel -->
-        <div id="carousel_{{ story.id }}" class="carousel slide" data-ride="carousel" data-wrap="false">
+        <div id="carousel_{{ story.id }}" class="carousel slide" data-ride="carousel" data-wrap="true">
           <!-- Indicators -->
           <ol class="carousel-indicators">
             {% for image in story.story.all %}
@@ -31,20 +31,49 @@
 
           <!-- Slides -->
           <div class="carousel-inner">
-            {% for image in story.story.all %}
-            <div class="carousel-item {% if forloop.first %}active{% endif %}">
-              {% if image.content.url|lower|slice:'-4' == '.mp4' %}
-                  <video width="640" controls="controls" preload="metadata" autoplay="autoplay">
-                    <source src="{{ image.content.url }}#t=0.5" type="video/mp4">
-                  </video>
-              {% else %}
-                  <img src="{{ image.content.url }}" class="img-fluid d-block w-100 carol_image" alt="Slide">
-                  <div class="text">{{ image.caption }}</div>
-              {% endif %}
-            </div>
-            {% endfor %}
-          </div>
+                  {% for image in story.story.all %}
+                            <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                             {% if image.content.url|lower|ends_with:".mp4" %}
+                              <video id="video-{{ story.id }}-{{ forloop.counter }}" width="640" preload="metadata" autoplay muted loop>
+                                <source src="{{ image.content.url }}" type="video/mp4">
+                                Your browser does not support the video tag.
+                              </video>
+                              <div class="custom-controls ml-5">
+                                <i class="fa fa-play-circle ml-lg-5 mr-3" onclick="togglePlay('{{ story.id }}-{{ forloop.counter }}')"></i>
 
+                                <i class="fa fa-volume-high" onclick="toggleMute('{{ story.id }}-{{ forloop.counter }}')"></i>
+                                <!-- Add more custom controls as needed -->
+                              </div>
+                            {% else %}
+                              <img src="{{ image.content.url }}" class="img-fluid d-block w-100" alt="Slide">
+                              <div class="text">{{ image.caption }}</div>
+                            {% endif %}
+
+
+                           </div>
+                  {% endfor %}
+             </div>
+<script>
+function togglePlay(videoId) {
+  var video = document.getElementById('video-' + videoId);
+  if (video.paused || video.ended) {
+    video.play();
+  } else {
+    video.pause();
+  }
+}
+
+
+function toggleMute(videoId) {
+  var video = document.getElementById('video-' + videoId);
+  if (video.muted) {
+    video.muted = false;
+  } else {
+    video.muted = true;
+  }
+}
+
+</script>
           <!-- Controls -->
              <!-- Controls -->
             <a class="carousel-control-prev" href="#carousel_{{ story.id }}" role="button" data-slide="prev">
