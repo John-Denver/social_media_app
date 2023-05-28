@@ -26,7 +26,7 @@ class Story(models.Model):
 class StoryStream(models.Model):
     following = models.ForeignKey(User, on_delete=models.CASCADE, related_name='story_following')
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    story = models.ManyToManyField(Story, related_name='storiess')
+    story = models.ManyToManyField(Story, related_name='stories')
     date = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

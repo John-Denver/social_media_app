@@ -1,106 +1,356 @@
-.badge {
-	position: absolute;
-	top: 1px;
-	right: -4px;
-	padding: 1px 7px;
-	border-radius: 50%;
-	background: red;
-	color: white;
-	font-weight: bold;
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
+
+/* CSS Reset */
+*,
+*::after,
+*::before {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+*, button, input, select, textarea {
+    font-family: 'Roboto', sans-serif;
+}
+
+/* Vars */
+:root {
+    --main_colour: hsl(0, 0%, 100%);
+    --secondary_css: hsl(0, 0%, 98%);
+    --border: hsl(0, 11%, 73%);
+
+    --story-border: hsl(0, 0%, 78%);
+    --img-border: hsla(0, 0%, 0%, 0.1);
+
+    --text-dark: hsl(0, 0%, 15%);
+    --text-light: hsl(0, 0%, 60%);
+
+    --like: hsl(355, 82%, 61%);
+    --link: hsl(204, 100%, 48%);
+
+    --header-height: 44px;
+    --nav-height: 44px;
+}
+:root.darkTheme {
+    --main_colour: hsl(0, 0%, 0%);
+    --secondary_css: hsl(0, 0%, 2%);
+    --border: hsl(0, 0%, 40%);
+
+    --story-border: hsl(0, 0%, 44%);
+    --img-border: hsla(0, 0%, 100%, 0.1);
+
+    --text-dark: hsl(0, 0%, 98%);
+    --text-light: hsl(0, 0%, 60%);
+}
+
+/* -------------------------------------------------- */
+
+/* General Styles */
+body {
+    min-height: 100vh;
+
+    display: block;
+    flex-direction: column;
+    overflow-y: auto;
+}
+
+svg { display: block; }
+
+
+.modal {
+    background-color: rgba(0,0,0,.599) !important;
+}
+/* -------------------------------------------------- */
+/* Main Content */
+.main-container {
+    background-color: var(--main_colour);
+
+    margin-top: var(--header-height);
+    margin-bottom: var(--nav-height);
+
+    display: block;
+}
+
+.content-container {
+    width: 100%;
+    max-width: 935px;
+
+    padding: 0 0 8px;
+
+    margin: 0 auto;
+    display: block;
+}
+.content {
+    width: 100%;
+    max-width: 614px;
+
+    margin: 0 auto;
+    display: block;
 }
 
 
-* {box-sizing:border-box}
-
-/* Slideshow container */
-.slideshow-container {
-  max-width: 1000px;
-  position: relative;
-  margin: auto;
-}
-
-/* Hide the images by default */
 .mySlides {
   display: none;
 }
 
-/* Next & previous buttons */
-.prev, .next {
-  cursor: pointer;
-  position: absolute;
-  top: 50%;
-  width: auto;
-  margin-top: -22px;
-  padding: 16px;
-  color: white;
-  font-weight: bold;
-  font-size: 18px;
-  transition: 0.6s ease;
-  border-radius: 0 3px 3px 0;
-  user-select: none;
+.stories {
+    width: 100%;
+    background-color: var(--main_colour);
+    padding: 16px 0;
+    flex-shrink: 0;
+    position: relative;
+    overflow: hidden;
 }
 
-/* Position the "next button" to the right */
-.next {
-  right: 0;
-  border-radius: 3px 0 0 3px;
+
+.stories::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+
+    width: 100%;
+    height: 1px;
+    background-color: var(--border);
 }
 
-/* On hover, add a black background color with a little bit see-through */
-.prev:hover, .next:hover {
-  background-color: rgba(0,0,0,0.8);
+
+.stories__content {
+    display: flex;
+    overflow-x: auto;
+    overflow-y: hidden;
+    gap: 16px;
+    padding: 0 16px;
+    position: relative;
+
+    scroll-behavior: smooth;
+    scrollbar-width: none;
+}
+.stories__content::-webkit-scrollbar {
+    display: none;
 }
 
-/* Caption text */
-.text {
-  color: #f2f2f2;
-  font-size: 15px;
-  padding: 8px 12px;
-  position: absolute;
-  bottom: 8px;
-  width: 100%;
-  text-align: center;
+.posts {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    gap: 8px;
 }
 
-/* Number text (1/3 etc) */
-.numbertext {
-  color: #f2f2f2;
-  font-size: 12px;
-  padding: 8px 12px;
-  position: absolute;
-  top: 0;
+.stories__left-button,
+.post__left-button,
+.stories__right-button,
+.post__right-button {
+    width: 24px;
+    height: 24px;
+    display: none;
+
+    background-color: transparent;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    filter: drop-shadow(0px 0px 5px rgba(0,0,0,0.5));
+
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 1;
+}
+.stories__left-button {
+    left: 10px;
+}
+.stories__right-button {
+    right: 10px;
+}
+.post__left-button {
+    left: 16px;
+    opacity: .7;
+}
+.post__right-button {
+    right: 16px;
+    opacity: .7;
 }
 
-/* The dots/bullets/indicators */
-.dot {
-  cursor: pointer;
-  height: 15px;
-  width: 15px;
-  margin: 0 2px;
-  background-color: #bbb;
-  border-radius: 50%;
-  display: inline-block;
-  transition: background-color 0.6s ease;
+
+/* Components */
+/* Story */
+.story {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
 }
 
-.active, .dot:hover {
-  background-color: #717171;
+.story__avatar {
+    position: relative;
+}
+.story__border {
+    width: 64px;
+    height: 64px;
+
+    fill: none;
+    stroke: var(--story-border);
+    stroke-width: 1.5;
+}
+.story--has-story .story__border {
+    stroke: url(#--story-gradient);
+    stroke-width: 2;
+}
+.story__picture {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    overflow: hidden;
+}
+.story__picture::after {
+    content: '';
+    position: absolute;
+    top: 0; bottom: 0;
+    left: 0; right: 0;
+
+    border: 1px solid var(--img-border);
+    border-radius: 50%;
 }
 
-/* Fading animation */
-.fade {
-  -webkit-animation-name: fade;
-  -webkit-animation-duration: 1.5s;
-  animation-name: fade;
-  animation-duration: 1.5s;
+.story__user {
+    font-size: 12px;
+    font-weight: 400;
+    color: var(--text-light);
+
+    max-width: 72px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}
+.story--has-story .story__user {
+    color: var(--text-dark);
+}
+/* Profile Button */
+.profile-button {
+    background-color: transparent;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    position: relative;
+}
+.profile-button__border {
+    display: none;
+
+    width: 30px;
+    height: 30px;
+    border: 1px solid var(--text-dark);
+    border-radius: 50%;
+
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+}
+.profile-button:focus .profile-button__border {
+    display: block;
+}
+.profile-button__picture {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+
+    overflow: hidden;
+    position: relative;
+}
+.profile-button__picture::after {
+    content: '';
+    position: absolute;
+    top: 0; bottom: 0;
+    left: 0; right: 0;
+
+    border: 1px solid var(--img-border);
+    border-radius: 50%;
 }
 
-@-webkit-keyframes fade {
-  from {opacity: .4}
-  to {opacity: 1}
+
+/* Media Queries */
+@media (max-width: 767px) {
+    .header__buttons--desktop {
+        display: none;
+    }
+
+    /* Fix post medias indicators bugs on mobile */
+    .post__medias {
+        gap: 1px;
+    }
 }
 
-@keyframes fade {
-  from {opacity: .4}
-  to {opacity: 1}
+@media (min-width: 620px) {
+    .content-container {
+        padding: 30px 0 24px;
+    }
+
+    .content {
+        gap: 24px;
+    }
+
+    .stories {
+        border: 1px solid var(--border);
+        border-radius: 4px;
+    }
+    .stories::after {
+        content: none;
+    }
+
+    .posts {
+        gap: 24px;
+    }
+    .post {
+        border: 1px solid var(--border);
+        border-radius: 4px;
+    }
+    .post__footer {
+        padding: 4px 8px 12px;
+    }
+    .post__date-time {
+        margin-top: 6px;
+    }
+}
+
+@media (min-width: 768px) {
+    :root {
+        --header-height: 54px;
+        --nav-height: 0px;
+    }
+
+    .header__content {
+        padding: 0 20px;
+    }
+
+    .header__search {
+        display: flex;
+    }
+
+    .header__buttons--mobile {
+        display: none;
+    }
+
+    .navbar {
+        display: none;
+    }
+}
+
+@media (min-width: 1024px) {
+    .main-container {
+        background-color: var(--secondary_css);
+    }
+
+    .content {
+        margin: unset;
+    }
+
+    .side-menu {
+        display: flex;
+    }
 }

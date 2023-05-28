@@ -228,15 +228,20 @@ img { max-width: 100%; }
     flex-direction: column;
 }
 
+
+.mySlides {
+  display: none;
+}
+
 .stories {
     width: 100%;
     background-color: var(--main_colour);
     padding: 16px 0;
     flex-shrink: 0;
-
     position: relative;
     overflow: hidden;
 }
+
 
 .stories::after {
     content: '';
@@ -247,6 +252,8 @@ img { max-width: 100%; }
     height: 1px;
     background-color: var(--border);
 }
+
+
 .stories__content {
     display: flex;
     overflow-x: auto;
@@ -260,6 +267,20 @@ img { max-width: 100%; }
 }
 .stories__content::-webkit-scrollbar {
     display: none;
+}
+.modal-content {
+  border:none;
+}
+.modal-body {
+   padding: 0;
+}
+.carol_image{
+    width: 100%;
+  max-width: 700px;
+    max-height: 600px;
+  height: auto;
+	background-size: cover;
+	overflow: hidden;
 }
 
 .posts {
@@ -877,9 +898,14 @@ img { max-width: 100%; }
 
 /* Hide the images by default */
 
-/*.mySlides {*/
-/*  display: none;*/
-/*}*/
+
+/*.carol_slide{*/
+/*    display: block;*/
+/*  width: 100%; !* Adjust the image width as needed *!*/
+/*  height: auto;*/
+/*  object-fit: cover;*/
+/*}!* Adjust *!*/
+
 
 /* Next & previous buttons */
 .prev, .next {

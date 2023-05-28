@@ -19,7 +19,7 @@ from comment.models import Comment
 # Create your views here.
 
 # the redirect if not logged in has been specified in settings.py under LOGIN_URL
-@login_required()
+@login_required
 def index(request):
     user = request.user  # get logged in user
     all_users = User.objects.all()
