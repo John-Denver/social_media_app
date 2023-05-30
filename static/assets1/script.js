@@ -195,24 +195,40 @@ postsContent.forEach((post) => {
         });
 
 // Stories slider
-function togglePlay(videoId) {
-  var video = document.getElementById('video-' + videoId);
-  if (video.paused || video.ended) {
-    video.play();
-  } else {
-    video.pause();
-  }
-}
+$(document).ready(function() {
+  $('.carousel').on('slid.bs.carousel', function() {
+    // Pause the currently playing video
+    var currentSlide = $('.carousel-item.active').find('video');
+    if (currentSlide.length > 0) {
+      currentSlide[0].video.pause();
+    }
+  });
 
-
-function toggleMute(videoId) {
-  var video = document.getElementById('video-' + videoId);
-  if (video.muted) {
-    video.muted = false;
-  } else {
-    video.muted = true;
+  function togglePlay(videoId) {
+    var video = document.getElementById('video-' + videoId);
+    if (video.paused || video.ended) {
+      video.play();
+    } else {
+      video.pause();
+    }
   }
-}
+
+  $('.play-pause-button').click(function(event) {
+    var videoId = event.currentTarget.getAttribute('data-video-id');
+    togglePlay(videoId);
+  });
+
+  function toggleMute(videoId) {
+    var video = document.getElementById('video-' + videoId);
+    video.muted = !video.muted;
+  }
+
+  $('.volume-button').click(function(event) {
+    var videoId = event.currentTarget.getAttribute('data-video-id');
+    toggleMute(videoId);
+  });
+});
+
 // $(document).ready(function() {
 //   $('.showModal').click(function(event) {
 //     var storyid = event.currentTarget.name;

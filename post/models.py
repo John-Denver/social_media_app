@@ -4,6 +4,10 @@ from django.db.models.signals import post_save, post_delete
 from django.utils.text import slugify
 from django.urls import reverse
 import uuid
+import os
+# from django.contrib.postgres.fields import ArrayField
+from django.contrib.contenttypes.models import ContentType
+from django.contrib.contenttypes.fields import GenericForeignKey, GenericRelation
 
 
 # uploads user files to a specific directory
@@ -27,9 +31,35 @@ class Tag(models.Model):
         return self.name
 
 
+# Get the files posted and check if they are images or videos
+
+class Media(models.Model):
+    MEDIA_TYPES = (
+        ('image', 'Image'),
+        ('video', 'Video'),
+    )
+
+    file = models.FileField(upload_to=user_directory_path)
+    post = models.ForeignKey('Post', on_delete=models.CASCADE, related_name='media')
+    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
+    object_id = models.UUIDField(default=uuid.uuid4, editable=False)
+    content_object = GenericForeignKey('content_type', 'object_id')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, default=1)
+
+    def save(self, *args, **kwargs):
+        ext = os.path.splitext(self.file.name)[1].lower()
+
+        if ext in ['.jpg', '.jpeg', '.png', '.gif']:
+            self.media_type = 'image'
+        elif ext in ['.mp4', '.mov', '.avi']:
+            self.media_type = 'video'
+
+        super().save(*args, **kwargs)
+
+
 class Post(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    picture = models.ImageField(upload_to=user_directory_path, verbose_name="picture")
+    media = GenericRelation(Media, related_query_name='posts')
     caption = models.CharField(max_length=10000, verbose_name="caption")
     posted = models.DateTimeField(auto_now_add=True)
     tags = models.ManyToManyField(Tag, blank=True)

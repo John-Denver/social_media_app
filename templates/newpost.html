@@ -11,7 +11,8 @@
       {% csrf_token %}
       <img src='#' id='uploaded' alt="upload picture"> <!-- Uploaded picture goes here -->
        <div class="user-box picture">
-        {{ form.picture }}
+        <label for="id_media">Media:</label>
+            <input type="file" name="media" id="id_media" multiple>
         </div>
 
 

@@ -1,15 +1,18 @@
 import json
+import random
+import string
 from itertools import groupby
 
 from django.contrib.auth.models import User
 from django.shortcuts import render, redirect, get_object_or_404
 
 from comment.forms import CommentForm
-from post.models import Tag, Post, Stream, Follow
+from post.models import Tag, Post, Stream, Follow, Media
 from stories.models import Story, StoryStream
 
 from django.contrib.auth.decorators import login_required
-from post.forms import NewPostForm
+# from post.forms import NewPostForm
+from .forms import PostForm, MediaFormSet
 from django.http import HttpResponseRedirect, JsonResponse, HttpResponse
 from django.urls import reverse
 from userauth.models import Profile
@@ -63,37 +66,36 @@ def story_detail(request):
 
 @login_required()
 def new_post(request):
-    user = request.user.id
+    user = request.user
     tags_objs = []
 
     if request.method == "POST":
-        form = NewPostForm(request.POST, request.FILES)
+        form = PostForm(request.POST, request.FILES)
         if form.is_valid():
-            picture = form.cleaned_data.get('picture')
             caption = form.cleaned_data.get('caption')
             tag_form = form.cleaned_data.get('tag')
             tags_list = list(str(tag_form).split(','))
-            # when user puts a comma the above code will know that now it's a different hashtag being put
 
             for tag in tags_list:
                 t, created = Tag.objects.get_or_create(name=tag)
                 tags_objs.append(t)
-            p, created = Post.objects.get_or_create(picture=picture, caption=caption, user_id=user)
-            p.tags.set(tags_objs)
-            p.save()
-            # return and execute the function named index
+
+            post = Post.objects.create(caption=caption, user=user)
+
+            # for file in request.FILES.getlist('media'):
+    #     media = Media.objects.create(media_type='image', file=file, content_object=post, object_id=post.id, post=post)
+            for file in request.FILES.getlist('media'):
+                media = Media.objects.create(file=file, post=post, content_object=post)
+
+            post.tags.set(tags_objs)
             return redirect('index')
-
-        # if method in form is not POST
-
     else:
-        form = NewPostForm()
-        context = {
-            'form': form
-        }
-        return render(request, 'newpost.html', context)
+        form = PostForm()
 
-
+    context = {
+        'form': form
+    }
+    return render(request, 'newpost.html', context)
 
 
 @login_required()
@@ -226,3 +228,36 @@ def favourite(request, post_id):
         profile.favourite.add(post)
     return HttpResponseRedirect(reverse('post_detail', args=[post_id]))
 
+
+# @login_required()
+# def new_post(request):
+#     user = request.user.id
+#     tags_objs = []
+#
+#     if request.method == "POST":
+#         form = NewPostForm(request.POST, request.FILES)
+#         if form.is_valid():
+#             picture = form.cleaned_data.get('picture')
+#             caption = form.cleaned_data.get('caption')
+#             tag_form = form.cleaned_data.get('tag')
+#             tags_list = list(str(tag_form).split(','))
+#             # when user puts a comma the above code will know that now it's a different hashtag being put
+#
+#             for tag in tags_list:
+#                 t, created = Tag.objects.get_or_create(name=tag)
+#                 tags_objs.append(t)
+#             p, created = Post.objects.get_or_create(picture=picture, caption=caption, user_id=user)
+#             p.tags.set(tags_objs)
+#             p.save()
+#             # return and execute the function named index
+#             return redirect('index')
+#
+#         # if method in form is not POST
+#
+#     else:
+#         form = NewPostForm()
+#         context = {
+#             'form': form
+#         }
+#         return render(request, 'newpost.html', context)
+#
