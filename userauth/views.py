@@ -4,6 +4,7 @@ from django.core.paginator import Paginator
 from django.urls import resolve, reverse
 from django.db import transaction
 
+from comment.models import Comment
 from post.models import Post, Follow, Stream
 from userauth.forms import *
 from userauth.models import *
@@ -22,6 +23,7 @@ def user_profile(request, username):
         posts = profile.favourite.all()
     # Tracking profile stats (posts count, follow count, following count)
     post_count = Post.objects.filter(user=user).count()
+
     # People that are following me (coming from posts.model)
     followers_count = Follow.objects.filter(follower=user).count()
     following_count = Follow.objects.filter(following=user).count()  # People that I'm following

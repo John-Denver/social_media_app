@@ -84,6 +84,7 @@
                         <a href="{% url 'newstory' %}">
                             <button class="story">
                             <div class="story__avatar">
+
                               <div class="story__border">
                                 <svg
                                   width="64"
@@ -93,9 +94,9 @@
                                   <circle r="31" cy="32" cx="32"></circle>
                                 </svg>
                               </div>
+
                               <div class="story__picture">
                                 <img src="{{ user.profile.image.url }}" alt="User Picture" />
-
                               </div>
 
                             </div>
@@ -157,24 +158,24 @@
                             </div>
 
                             <button class="post__more-options">
-                          <i class="fa-solid fa-ellipsis fa-lg"></i>
-                        </button>
+                              <i class="fa-solid fa-ellipsis fa-lg"></i>
+                            </button>
                       </div>
 
-                        <a href="{% url 'post_detail' post.id %}">
+{#                      <a href="{% url 'post_detail' post.id %}">#}
                           <div class="post__content">
-                             <div class="post__medias">
-                                {% for media in post.media.all %}
-                                    {% if media.file.url|lower|ends_with:".jpg" or media.file.url|lower|ends_with:".jpeg" or media.file.url|lower|ends_with:".png" or media.file.url|lower|ends_with:".gif" %}
-                                        <img class="post__media" src="{{ media.file.url }}" alt="Post Content" style="height: 400px; object-fit: cover"/>
-                                    {% elif media.file.url|lower|ends_with:".mp4" %}
-                                        <video class="post__media" src="{{ media.file.url }}" autoplay muted loop style="height: 400px; object-fit: cover"></video>
-                                    {% endif %}
-                                {% endfor %}
-                            </div>
+                                 <div class="post__medias">
+                                    {% for media in post.media.all %}
+                                        {% if media.file.url|lower|ends_with:".jpg" or media.file.url|lower|ends_with:".jpeg" or media.file.url|lower|ends_with:".png" or media.file.url|lower|ends_with:".gif" %}
+                                            <img class="post__media" src="{{ media.file.url }}" alt="Post Content" style="height: 400px; object-fit: cover"/>
+                                        {% elif media.file.url|lower|ends_with:".mp4" %}
+                                            <video class="post__media" src="{{ media.file.url }}" autoplay muted loop style="height: 400px; object-fit: cover"></video>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
 
                           </div>
-                        </a>
+{#                      </a>#}
 
                       <div class="post__footer">
                         <div class="post__buttons">
@@ -188,14 +189,9 @@
                                     {% endif %}
                                 </button>
                         </form>
-                        <script>
-
-                        </script>
-
-
 
                             {# Comment icon #}
-                          <a href="" class="post__button">
+                          <a href="{% url 'post_detail' post.id %}" class="post__button">
                                 <i class="fa-regular fa-comment fa-2x" style="color: black; font-size: 27px;"></i>
                           </a>
                                 {# Send message icon #}
@@ -303,8 +299,13 @@
 
 
                     <div class="side-menu__suggestion-info">
-                      <a href="{% url 'profile' user.username %}">{{ user.profile.first_name }} {{ user.profile.last_name }}</a>
-                      <span>@{{ user.username }}</span>
+                        {% if user.profile.first_name and user.profile.last_name %}
+                              <a href="{% url 'profile' user.username %}">{{ user.profile.first_name }} {{ user.profile.last_name }}</a>
+                              <span>@{{ user.username }}</span>
+                        {% else %}
+                            <a href="{% url 'profile' user.username %}">Instagram User</a>
+                              <span>@{{ user.username }}</span>
+                        {% endif %}
                     </div>
 
                     <a href="{% url 'follow' user 1 %}" class="side-menu__suggestion-button">Follow</a>
