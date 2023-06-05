@@ -4,6 +4,7 @@ from django.core.paginator import Paginator
 from django.urls import resolve, reverse
 from django.db import transaction
 
+from comment.forms import CommentForm
 from comment.models import Comment
 from post.models import Post, Follow, Stream
 from userauth.forms import *
@@ -37,6 +38,40 @@ def user_profile(request, username):
     posts_paginator = paginator.get_page(page_number)
 
     # when passing contexts what's inside the ' ' will be called in html templated i.e. {{ profile.user }}
+
+    post_stream = Stream.objects.filter(user=user)
+    group_ids = [post.post_id for post in post_stream]
+    post_items = Post.objects.filter(id__in=group_ids).order_by('-posted')
+
+    # Retrieve comments and select related users for each post
+    comments = Comment.objects.filter(post_id__in=group_ids).select_related('user').order_by('-date')
+
+    # Create a dictionary to map post IDs to their comments
+    post_comments = {}
+    for comment in comments:
+        if comment.post_id not in post_comments:
+            post_comments[comment.post_id] = []
+        post_comments[comment.post_id].append(comment)
+
+    # Count the comments for each post
+    comment_counts = {post_id: len(comment_list) for post_id, comment_list in post_comments.items()}
+
+    # Create a comment form instance
+    comment_form = CommentForm()
+
+    # Handle comment submission
+    if request.method == 'POST':
+        comment_form = CommentForm(request.POST)
+        if comment_form.is_valid():
+            body = comment_form.cleaned_data['body']
+            # Get the post associated with the comment
+            post_id = request.POST.get('post_id')  # Assuming you have a hidden input field with the post_id in the form
+            post = Post.objects.get(id=post_id)
+            # Create a new comment
+            comment = Comment.objects.create(post=post, user=request.user, body=body)
+            # Redirect back to the index page
+            return redirect('index')
+
     context = {
         'posts_paginator': posts_paginator,
         'profile': profile,
@@ -46,6 +81,8 @@ def user_profile(request, username):
         'followers_count': followers_count,
         'following_count': following_count,
         'follow_status': follow_status,
+        'comment_form': comment_form,
+        'comment_counts': comment_counts,
     }
     return render(request, 'profile.html', context)
 

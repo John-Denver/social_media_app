@@ -73,6 +73,10 @@
     </div>
     {% endfor %}
 
+    <!--Post detail Modal -->
+{% include 'post-detail.html' %}
+
+
     <main class="main-container">
           <section class="content-container">
                 <div class="content">
@@ -80,73 +84,73 @@
                         <button class="stories__left-button">
                           <i class="fa-solid fa-chevron-left fa-2x"></i>
                         </button>
-                    <div class="stories__content">
-                        <a href="{% url 'newstory' %}">
-                            <button class="story">
-                            <div class="story__avatar">
+                        <div class="stories__content">
+                            <a href="{% url 'newstory' %}">
+                                <button class="story">
+                                <div class="story__avatar">
 
-                              <div class="story__border">
-                                <svg
-                                  width="64"
-                                  height="64"
-                                  xmlns="http://www.w3.org/2000/svg"
-                                >
-                                  <circle r="31" cy="32" cx="32"></circle>
-                                </svg>
-                              </div>
+                                  <div class="story__border">
+                                    <svg
+                                      width="64"
+                                      height="64"
+                                      xmlns="http://www.w3.org/2000/svg"
+                                    >
+                                      <circle r="31" cy="32" cx="32"></circle>
+                                    </svg>
+                                  </div>
 
-                              <div class="story__picture">
-                                <img src="{{ user.profile.image.url }}" alt="User Picture" />
-                              </div>
-
-                            </div>
-                                <i class="fa fa-plus fa-3x mt-2" style="position:absolute; background-color: rgba(255, 255, 255, 0.1); color: gray;"></i>
-                            <span class="story__user">My Story</span>
-                          </button>
-                        </a>
-
-                        {% for story in stories %}
-                          <!-- Button trigger modal -->
-                          <button type="button" class="story story--has-story" data-toggle="modal" data-target="#story_id_{{ story.id }}">
-                            <a name="{{ story.id }}" class="showModal">
-                              <div class="story__avatar">
-                                <div class="story__border">
-                                  <svg width="64" height="64" xmlns="http://www.w3.org/2000/svg">
-                                    <circle r="31" cy="32" cx="32"></circle>
-                                    <defs>
-                                      <linearGradient y2="0" x2="1" y1="1" x1="0" id="--story-gradient">
-                                        <stop offset="0" stop-color="#f09433"></stop>
-                                        <stop offset="0.25" stop-color="#e6683c"></stop>
-                                        <stop offset="0.5" stop-color="#dc2743"></stop>
-                                        <stop offset="0.75" stop-color="#cc2366"></stop>
-                                        <stop offset="1" stop-color="#bc1888"></stop>
-                                      </linearGradient>
-                                    </defs>
-                                  </svg>
-                                </div>
-                                <div class="story__picture">
-                                  {% if story.following.profile.image %}
-                                    <img src="{{ story.following.profile.image.url }}" alt="{{ user.username }}" />
-                                  {% else %}
+                                  <div class="story__picture">
                                     <img src="{{ user.profile.image.url }}" alt="User Picture" />
-                                  {% endif %}
+                                  </div>
+
                                 </div>
-                              </div>
-                              <span class="story__user username_of_story_owner">{{ story.following.profile.user }}</span>
+                                    <i class="fa fa-plus fa-3x mt-2" style="position:absolute; background-color: rgba(255, 255, 255, 0.1); color: gray;"></i>
+                                <span class="story__user">My Story</span>
+                              </button>
                             </a>
-                          </button>
 
-                        {% endfor %}
-                    </div> <!-----stories__content ----->
+                            {% for story in stories %}
+                              <!-- Button trigger modal -->
+                              <button type="button" class="story story--has-story" data-toggle="modal" data-target="#story_id_{{ story.id }}">
+                                <a name="{{ story.id }}" class="showModal">
+                                  <div class="story__avatar">
+                                    <div class="story__border">
+                                      <svg width="64" height="64" xmlns="http://www.w3.org/2000/svg">
+                                        <circle r="31" cy="32" cx="32"></circle>
+                                        <defs>
+                                          <linearGradient y2="0" x2="1" y1="1" x1="0" id="--story-gradient">
+                                            <stop offset="0" stop-color="#f09433"></stop>
+                                            <stop offset="0.25" stop-color="#e6683c"></stop>
+                                            <stop offset="0.5" stop-color="#dc2743"></stop>
+                                            <stop offset="0.75" stop-color="#cc2366"></stop>
+                                            <stop offset="1" stop-color="#bc1888"></stop>
+                                          </linearGradient>
+                                        </defs>
+                                      </svg>
+                                    </div>
+                                    <div class="story__picture">
+                                      {% if story.following.profile.image %}
+                                        <img src="{{ story.following.profile.image.url }}" alt="{{ user.username }}" />
+                                      {% else %}
+                                        <img src="{{ user.profile.image.url }}" alt="User Picture" />
+                                      {% endif %}
+                                    </div>
+                                  </div>
+                                  <span class="story__user username_of_story_owner">{{ story.following.profile.user }}</span>
+                                </a>
+                              </button>
 
-                    <button class="stories__right-button">
-                        <i class="fa-solid fa-chevron-right fa-2x"></i>
-                    </button>
+                            {% endfor %}
+                        </div> <!-----stories__content ----->
 
-                  </div>
+                        <button class="stories__right-button">
+                            <i class="fa-solid fa-chevron-right fa-2x"></i>
+                        </button>
+
+                    </div>
 
 
-                  <div class="posts">
+                    <div class="posts">
                     {% for post in post_items %}
                         <article class="post">
                       <div class="post__header">
@@ -163,6 +167,7 @@
                       </div>
 
 {#                      <a href="{% url 'post_detail' post.id %}">#}
+                        <a href="{% url 'post_detail' post.id %}" class="" data-toggle="modal" data-target="#exampleModalCenter2_{{ post.id }}">
                           <div class="post__content">
                                  <div class="post__medias">
                                     {% for media in post.media.all %}
@@ -173,8 +178,8 @@
                                         {% endif %}
                                     {% endfor %}
                                 </div>
-
                           </div>
+                        </a>
 {#                      </a>#}
 
                       <div class="post__footer">
@@ -191,9 +196,19 @@
                         </form>
 
                             {# Comment icon #}
-                          <a href="{% url 'post_detail' post.id %}" class="post__button">
-                                <i class="fa-regular fa-comment fa-2x" style="color: black; font-size: 27px;"></i>
-                          </a>
+                        {% if comment_counts|get_item:post.id > 0 %}
+                              <a href="{% url 'post_detail' post.id %}" class="post__button">
+                                    <i class="fa-regular fa-comment fa-2x" style="color: black; font-size: 20px;">
+                                        &nbsp;{{ comment_counts|get_item:post.id }}
+                                    </i>
+                              </a>
+                        {% else %}
+                              <a href="{% url 'post_detail' post.id %}" class="post__button">
+                                    <i class="fa-regular fa-comment fa-2x" style="color: black; font-size: 20px;">
+                                        &nbsp;0
+                                    </i>
+                              </a>
+                        {% endif %}
                                 {# Send message icon #}
                           <a href="" class="post__button">
                                 <i class="fa-regular fa-paper-plane fa-2x" style="color: black; font-size: 27px;"></i>
@@ -247,6 +262,7 @@
                                 {% endfor %}
                             </span>
 
+
                           <span class="post__date-time">{{ post.posted| timesince_hours }} ago</span>
                         </div>
                       </div>
@@ -256,108 +272,8 @@
 
                 </div>
 
-                <section class="side-menu">
-              <div class="side-menu__user-profile">
-                  {% if user.profile.image %}
-                        <a href="{{ user.username }}" class="side-menu__user-avatar">
-                          <img src="{{ user.profile.image.url }}" alt="User Picture" />
-                        </a>
-                  {% else %}
-                      <a href="{{ user.username }}" class="side-menu__user-avatar">
-                          <img src="{% static 'assets1/default-user.png' %}" alt="User Picture" />
-                      </a>
-                  {% endif %}
+               {% include 'side-menu.html' %}
 
-                <div class="side-menu__user-info">
-                  <a href="{{ user.username }}"
-                    >{{ user.username }}</a
-                  >
-                  <span>{{ user.first_name }}</span>
-                </div>
-                <button class="side-menu__user-button">Switch</button>
-              </div>
-
-              <div class="side-menu__suggestions-section">
-                <div class="side-menu__suggestions-header">
-                  <h2>Suggestions for You</h2>
-                  <button>See All</button>
-                </div>
-
-                  {% for user in all_users %}
-                <div class="side-menu__suggestions-content">
-                  <div class="side-menu__suggestion">
-
-                       {% if user.profile.image %}
-                            <a href="{% url 'profile' user.username %}" class="side-menu__suggestion-avatar">
-                              <img src="{{user.profile.image.url}}" alt="User Picture" />
-                            </a>
-                       {% else %}
-                           <a href="{% url 'profile' user.username %}" class="side-menu__suggestion-avatar">
-                              <img src="{% static 'assets1/default-user.png' %}" alt="User Picture" />
-                            </a>
-                       {% endif %}
-
-
-                    <div class="side-menu__suggestion-info">
-                        {% if user.profile.first_name and user.profile.last_name %}
-                              <a href="{% url 'profile' user.username %}">{{ user.profile.first_name }} {{ user.profile.last_name }}</a>
-                              <span>@{{ user.username }}</span>
-                        {% else %}
-                            <a href="{% url 'profile' user.username %}">Instagram User</a>
-                              <span>@{{ user.username }}</span>
-                        {% endif %}
-                    </div>
-
-                    <a href="{% url 'follow' user 1 %}" class="side-menu__suggestion-button">Follow</a>
-
-                  </div>
-                </div>
-                   {% endfor %}
-              </div>
-
-              <div class="side-menu__footer">
-                <div class="side-menu__footer-links">
-                  <ul class="side-menu__footer-list">
-                    <li class="side-menu__footer-item">
-                      <a class="side-menu__footer-link" href="#">About</a>
-                    </li>
-                    <li class="side-menu__footer-item">
-                      <a class="side-menu__footer-link" href="#">Help</a>
-                    </li>
-                    <li class="side-menu__footer-item">
-                      <a class="side-menu__footer-link" href="#">Press</a>
-                    </li>
-                    <li class="side-menu__footer-item">
-                      <a class="side-menu__footer-link" href="#">API</a>
-                    </li>
-                    <li class="side-menu__footer-item">
-                      <a class="side-menu__footer-link" href="#">Jobs</a>
-                    </li>
-                    <li class="side-menu__footer-item">
-                      <a class="side-menu__footer-link" href="#">Privacy</a>
-                    </li>
-                    <li class="side-menu__footer-item">
-                      <a class="side-menu__footer-link" href="#">Terms</a>
-                    </li>
-                    <li class="side-menu__footer-item">
-                      <a class="side-menu__footer-link" href="#">Locations</a>
-                    </li>
-                    <li class="side-menu__footer-item">
-                      <a class="side-menu__footer-link" href="#">Top Accounts</a>
-                    </li>
-                    <li class="side-menu__footer-item">
-                      <a class="side-menu__footer-link" href="#">Hashtag</a>
-                    </li>
-                    <li class="side-menu__footer-item">
-                      <a class="side-menu__footer-link" href="#">Language</a>
-                    </li>
-                  </ul>
-                </div>
-
-                <span class="side-menu__footer-copyright"
-                  >&copy; 2023 Jewagram from Aquila</span>
-              </div>
-            </section>
           </section>
     </main>
 
@@ -459,6 +375,7 @@
         </div>
       </button>
     </nav>
+
 {% endblock content %}
 
 

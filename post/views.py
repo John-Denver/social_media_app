@@ -22,26 +22,48 @@ from comment.models import Comment
 # Create your views here.
 
 # the redirect if not logged in has been specified in settings.py under LOGIN_URL
+
 @login_required
 def index(request):
-    user = request.user  # get logged in user
+    user = request.user
     all_users = User.objects.all()
     profile = Profile.objects.all()
     tags = Tag.objects.all()
 
     stories = StoryStream.objects.filter(user=user)
 
-    # The story field is the related name for the foreign key relationship between Story and User models.
-    # It specifies how to access Story objects from a User object.
-    # "story__null=False" The "story" comes from the related name of the user in Story Model
+    posts = Stream.objects.filter(user=user)
+    group_ids = [post.post_id for post in posts]
+    post_items = Post.objects.filter(id__in=group_ids).order_by('-posted')
 
-    posts = Stream.objects.filter(user=user)  # stream from models, this line gets posts of current logged-in user
-    group_ids = []
-    for post in posts:
-        group_ids.append(post.post_id)
-    # -posted gives results of the latest post at the top while posted the latest result is at the bottom
-    # posted is a string but references posted in models.py
-    post_items = Post.objects.filter(id__in=group_ids).all().order_by('-posted')
+    # Retrieve comments and select related users for each post
+    comments = Comment.objects.filter(post_id__in=group_ids).select_related('user').order_by('-date')
+
+    # Create a dictionary to map post IDs to their comments
+    post_comments = {}
+    for comment in comments:
+        if comment.post_id not in post_comments:
+            post_comments[comment.post_id] = []
+        post_comments[comment.post_id].append(comment)
+
+    # Count the comments for each post
+    comment_counts = {post_id: len(comment_list) for post_id, comment_list in post_comments.items()}
+
+    # Create a comment form instance
+    comment_form = CommentForm()
+
+    # Handle comment submission
+    if request.method == 'POST':
+        comment_form = CommentForm(request.POST)
+        if comment_form.is_valid():
+            body = comment_form.cleaned_data['body']
+            # Get the post associated with the comment
+            post_id = request.POST.get('post_id')  # Assuming you have a hidden input field with the post_id in the form
+            post = Post.objects.get(id=post_id)
+            # Create a new comment
+            comment = Comment.objects.create(post=post, user=request.user, body=body)
+            # Redirect back to the index page
+            return redirect('index')
 
     context = {
         'post_items': post_items,
@@ -49,8 +71,12 @@ def index(request):
         'profile': profile,
         'tags': tags,
         'stories': stories,
+        'post_comments': post_comments,
+        'comment_counts': comment_counts,
+        'comment_form': comment_form,
     }
     return render(request, 'index.html', context)
+
 
 
 @login_required()
@@ -113,7 +139,6 @@ def post_detail(request, post_id):
             comment.post = post
             comment.user = request.user
             comment.save()
-            # return and execute the function named index
             return HttpResponseRedirect(reverse("post_detail", args=[post_id]))
 
     else:
@@ -136,7 +161,7 @@ def tag_list(request):
 def tag_detail(request, slug):
     tag = get_object_or_404(Tag, slug=slug)
     posts = tag.post_set.all()
-    return render(request, 'tag_detail.html', {'tag': tag, 'posts': posts})
+    return render(request, 'tag_detail2.html', {'tag': tag, 'posts': posts})
 
 
 @login_required

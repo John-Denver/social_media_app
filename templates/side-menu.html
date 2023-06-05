@@ -1,0 +1,103 @@
+{% load static %}
+<section class="side-menu">
+                  <div class="side-menu__user-profile">
+                      {% if user.profile.image %}
+                            <a href="{{ user.username }}" class="side-menu__user-avatar">
+                              <img src="{{ user.profile.image.url }}" alt="User Picture" />
+                            </a>
+                      {% else %}
+                          <a href="{{ user.username }}" class="side-menu__user-avatar">
+                              <img src="{% static 'assets1/default-user.png' %}" alt="User Picture" />
+                          </a>
+                      {% endif %}
+
+                    <div class="side-menu__user-info">
+                      <a href="{{ user.username }}"
+                        >{{ user.username }}</a
+                      >
+                      <span>{{ user.first_name }}</span>
+                    </div>
+                    <button class="side-menu__user-button">Switch</button>
+                  </div>
+
+                  <div class="side-menu__suggestions-section">
+                    <div class="side-menu__suggestions-header">
+                      <h2>Suggestions for You</h2>
+                      <button>See All</button>
+                    </div>
+
+                      {% for user in all_users %}
+                    <div class="side-menu__suggestions-content">
+                      <div class="side-menu__suggestion">
+
+                           {% if user.profile.image %}
+                                <a href="{% url 'profile' user.username %}" class="side-menu__suggestion-avatar">
+                                  <img src="{{user.profile.image.url}}" alt="User Picture" />
+                                </a>
+                           {% else %}
+                               <a href="{% url 'profile' user.username %}" class="side-menu__suggestion-avatar">
+                                  <img src="{% static 'assets1/default-user.png' %}" alt="User Picture" />
+                                </a>
+                           {% endif %}
+
+
+                        <div class="side-menu__suggestion-info">
+                            {% if user.profile.first_name and user.profile.last_name %}
+                                  <a href="{% url 'profile' user.username %}">{{ user.profile.first_name }} {{ user.profile.last_name }}</a>
+                                  <span>@{{ user.username }}</span>
+                            {% else %}
+                                <a href="{% url 'profile' user.username %}">Instagram User</a>
+                                  <span>@{{ user.username }}</span>
+                            {% endif %}
+                        </div>
+
+                        <a href="{% url 'follow' user 1 %}" class="side-menu__suggestion-button">Follow</a>
+
+                      </div>
+                    </div>
+                       {% endfor %}
+                  </div>
+
+                  <div class="side-menu__footer">
+                <div class="side-menu__footer-links">
+                  <ul class="side-menu__footer-list">
+                    <li class="side-menu__footer-item">
+                      <a class="side-menu__footer-link" href="#">About</a>
+                    </li>
+                    <li class="side-menu__footer-item">
+                      <a class="side-menu__footer-link" href="#">Help</a>
+                    </li>
+                    <li class="side-menu__footer-item">
+                      <a class="side-menu__footer-link" href="#">Press</a>
+                    </li>
+                    <li class="side-menu__footer-item">
+                      <a class="side-menu__footer-link" href="#">API</a>
+                    </li>
+                    <li class="side-menu__footer-item">
+                      <a class="side-menu__footer-link" href="#">Jobs</a>
+                    </li>
+                    <li class="side-menu__footer-item">
+                      <a class="side-menu__footer-link" href="#">Privacy</a>
+                    </li>
+                    <li class="side-menu__footer-item">
+                      <a class="side-menu__footer-link" href="#">Terms</a>
+                    </li>
+                    <li class="side-menu__footer-item">
+                      <a class="side-menu__footer-link" href="#">Locations</a>
+                    </li>
+                    <li class="side-menu__footer-item">
+                      <a class="side-menu__footer-link" href="#">Top Accounts</a>
+                    </li>
+                    <li class="side-menu__footer-item">
+                      <a class="side-menu__footer-link" href="#">Hashtag</a>
+                    </li>
+                    <li class="side-menu__footer-item">
+                      <a class="side-menu__footer-link" href="#">Language</a>
+                    </li>
+                  </ul>
+                </div>
+
+                <span class="side-menu__footer-copyright"
+                  >&copy; 2023 Jewagram from Aquila</span>
+              </div>
+                </section>

@@ -442,6 +442,7 @@ img { max-width: 100%; }
 
 
 .post__content {
+    background-color: var(--main_colour);
     display: flex;
     position: relative;
 }
@@ -839,7 +840,7 @@ img { max-width: 100%; }
     }
     .post {
         border: 1px solid var(--border);
-        border-radius: 4px;
+        /*border-radius: 4px;*/
     }
     .post__footer {
         padding: 4px 8px 12px;
@@ -953,4 +954,26 @@ img { max-width: 100%; }
   padding: 8px 12px;
   position: absolute;
   top: 0;
+}
+
+
+.comment-section{
+    background-color: var(--main_colour);
+    overflow-y: auto;
+}
+
+.comment_sect {
+    overflow-y: auto;
+}
+
+.comment_sect p {
+    color: var(--text-dark);
+}
+
+.comment_sect a.post__name--underline {
+    text-decoration: none;
+}
+
+.comment_sect a.post__name--underline:hover {
+    color: var(--text-light);
 }
