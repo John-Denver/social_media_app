@@ -13,6 +13,8 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 
 
+from django.shortcuts import redirect
+
 @login_required()
 def user_profile(request, username):
     user = get_object_or_404(User, username=username)
@@ -32,31 +34,21 @@ def user_profile(request, username):
     # follow status .....to check whether you are following or not following a user
     follow_status = Follow.objects.filter(following=user, follower=request.user).exists()
 
-    #  Pagination
+    # Pagination
     paginator = Paginator(posts, 3)
     page_number = request.GET.get('page')
     posts_paginator = paginator.get_page(page_number)
 
-    # when passing contexts what's inside the ' ' will be called in html templated i.e. {{ profile.user }}
-
-    post_stream = Stream.objects.filter(user=user)
-    group_ids = [post.post_id for post in post_stream]
-    post_items = Post.objects.filter(id__in=group_ids).order_by('-posted')
-
-    # Retrieve comments and select related users for each post
-    comments = Comment.objects.filter(post_id__in=group_ids).select_related('user').order_by('-date')
-
     # Create a dictionary to map post IDs to their comments
     post_comments = {}
-    for comment in comments:
-        if comment.post_id not in post_comments:
-            post_comments[comment.post_id] = []
-        post_comments[comment.post_id].append(comment)
+    for post in posts:
+        comments = Comment.objects.filter(post=post).select_related('user')
+        post_comments[post.id] = comments
 
     # Count the comments for each post
     comment_counts = {post_id: len(comment_list) for post_id, comment_list in post_comments.items()}
 
-    # Create a comment form instance
+    # Comment form
     comment_form = CommentForm()
 
     # Handle comment submission
@@ -64,13 +56,10 @@ def user_profile(request, username):
         comment_form = CommentForm(request.POST)
         if comment_form.is_valid():
             body = comment_form.cleaned_data['body']
-            # Get the post associated with the comment
-            post_id = request.POST.get('post_id')  # Assuming you have a hidden input field with the post_id in the form
+            post_id = request.POST.get('post_id')
             post = Post.objects.get(id=post_id)
-            # Create a new comment
             comment = Comment.objects.create(post=post, user=request.user, body=body)
-            # Redirect back to the index page
-            return redirect('index')
+            return redirect('profile', username=username)
 
     context = {
         'posts_paginator': posts_paginator,
@@ -81,8 +70,9 @@ def user_profile(request, username):
         'followers_count': followers_count,
         'following_count': following_count,
         'follow_status': follow_status,
-        'comment_form': comment_form,
+        'post_comments': post_comments,
         'comment_counts': comment_counts,
+        'comment_form': comment_form,
     }
     return render(request, 'profile.html', context)
 
