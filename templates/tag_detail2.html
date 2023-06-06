@@ -120,7 +120,11 @@
 
                               <span class="p-2">
                                 <i class="fas fa-comment"></i>
-                                {{ post.comment }}
+                                 {% if comment_counts|get_item:post.id > 0 %}
+                                        &nbsp;{{ comment_counts|get_item:post.id }}
+                                  {% else %}
+                                        &nbsp;0
+                                  {% endif %}
                               </span>
                             </div>
                           </div>
@@ -156,23 +160,24 @@
 
    {% for post in posts %}
     <!-- Modal -->
-        <div class="modal fade" id="exampleModalCenter_{{ post.id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal fade" id="exampleModalCenter_{{ post.id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle2" aria-hidden="true">
               <div class="modal-dialog modal-dialog-centered" role="document" style="margin-left: 15%;">
                 <div class="modal-content" >
                   <div class="modal-body" style="width: 80vw;">
-                   <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                      <span aria-hidden="true">&times;</span>
-                    </button>
+                       <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                         <span aria-hidden="true">&times;</span>
+                       </button>
 
                       <div class="post-container">
+
                         <article class="post">
                               <div class="post__content">
                                      <div class="post__medias">
                                         {% for media in post.media.all %}
                                             {% if media.file.url|lower|ends_with:".jpg" or media.file.url|lower|ends_with:".jpeg" or media.file.url|lower|ends_with:".png" or media.file.url|lower|ends_with:".gif" %}
-                                                <img class="post__media w-full h-full" src="{{ media.file.url }}" alt="Post Content" style="height: 85vh; object-fit: cover"/>
+                                                <img class="post__media" src="{{ media.file.url }}" alt="Post Content" style="height: 100%;"/>
                                             {% elif media.file.url|lower|ends_with:".mp4" %}
-                                                <video class="post__media w-full" src="{{ media.file.url }}" autoplay muted loop style="height: 85vh; object-fit: cover"></video>
+                                                <video class="post__media" src="{{ media.file.url }}" autoplay muted loop style="height: 100%;"></video>
                                             {% endif %}
                                         {% endfor %}
                                      </div>
@@ -187,51 +192,66 @@
                         </article>
 
                         <article class="post">
-                                      <div class="post__header">
-                                            <div class="post__profile">
-                                              <a href="#" class="post__avatar">
-                                                <img src="{% static 'assets1/default-user.png' %}" alt="User Picture" />
-                                              </a>
-                                              <a href="{{ post.user.username }}" class="post__user">{{ post.user.username }}</a>
-                                            </div>
+                              <div class="post__header">
+                                    <div class="post__profile">
+                                      <a href="#" class="post__avatar">
+                                        <img src="{% static 'assets1/default-user.png' %}" alt="User Picture" />
+                                      </a>
+                                      <a href="{{ post.user.username }}" class="post__user">{{ post.user.username }}</a>
+                                    </div>
 
-                                            <button class="post__more-options">
-                                              <i class="fa-solid fa-ellipsis fa-lg"></i>
-                                            </button>
-                                      </div>
+                                    <button class="post__more-options">
+                                      <i class="fa-solid fa-ellipsis fa-lg"></i>
+                                    </button>
+                              </div>
 
-                                      <div class="post__content">
-                                             <div class="post__medias">
-                                                 <p>Lorem100</p>
-                                             </div>
-                                      </div>
+                              <div class="comment-section">
+                                     <div class="comment_sect">
+                                        <p class="">
+                                            {% if comment_counts|get_item:post.id > 0 %}
+                                                  &nbsp;{{ comment_counts|get_item:post.id }}
+                                            {% else %}
+                                                  &nbsp;0
+                                            {% endif %} Comments
+                                        </p>
 
-                                      <div class="post__footer">
-                                        <div class="post__buttons">
-                                        <form method="post" action="{% url 'like_post' %}">
-                                            {% csrf_token %}
-                                                <button type="submit" class="like-btn" data-post-id="{{ post.id }}">
-                                                    {% if request.user in post.likes.all %}
-                                                        Unlike
-                                                    {% else %}
-                                                        Like
-                                                    {% endif %}
-                                                </button>
-                                        </form>
+                                        {% with comments=post_comments|get_item:post.id %}
+                                            {% for comment in comments %}
+                                                <p><a class="post__name--underline" href="{% url 'profile' comment.user.username %}">
+                                                    <b>{{ comment.user.username }}:</b>
+                                               </a>
+                                                {{ comment.body }}
+                                            </p>
+                                            {% endfor %}
+                                        {% endwith %}
+                                     </div>
+                              </div>
+
+                              <div class="post__footer">
+
+                                    <div class="post__buttons">
+                                        <button type="submit" class="like-btn" data-post-id="{{ post.id }}">
+                                            {% if request.user in post.likes.all %}
+                                                Unlike
+                                            {% else %}
+                                                Like
+                                            {% endif %}
+                                        </button>
 
                                             {# Comment icon #}
-                                          <a href="" class="post__button">
-                                                <i class="fa-regular fa-comment fa-2x" style="color: black; font-size: 27px;"></i>
-                                          </a>
+                                        <a href="" class="post__button">
+                                             <i class="fa-regular fa-comment fa-2x" style="color: black; font-size: 27px;"></i>
+                                        </a>
                                                 {# Send message icon #}
-                                          <a href="" class="post__button">
-                                                <i class="fa-regular fa-paper-plane fa-2x" style="color: black; font-size: 27px;"></i>
-                                          </a>
+                                        <a href="" class="post__button">
+                                              <i class="fa-regular fa-paper-plane fa-2x" style="color: black; font-size: 27px;"></i>
+                                        </a>
 
-                                          <div class="post__indicators"></div>
 
-                                          <a href="" class="post__button post__button--align-right">
-                                            <svg
+                                        <div class="post__indicators"></div>
+
+                                        <a href="{% url 'post-favourite' post.id %}" class="post__button post__button--align-right">
+                                           <svg
                                               width="24"
                                               height="24"
                                               viewBox="0 0 24 24"
@@ -244,44 +264,59 @@
                                                 stroke="var(--text-dark)"
                                                 stroke-width="0.7"></path>
                                             </svg>
-                                          </a>
+                                        </a>
+                                    </div>
+
+                                    <div class="post__infos">
+                                        <div class="post__likes">
+                                          {% if user.profile.image %}
+                                                <a href="#" class="post__likes-avatar">
+                                                  <img src="{{ user.profile.image.url }}" alt="User Picture" />
+                                                </a>
+                                          {% else %}
+                                               <a href="#" class="post__likes-avatar">
+                                                  <img src="{% static 'assets1/default-user.png' %}" alt="User Picture" />
+                                               </a>
+                                          {% endif %}
+                                          <span>
+                                            <a class="post__name--underline" href="#" style="color: var(--text-dark);">{{ post.likes.count }} Likes</a>
+                                          </span>
                                         </div>
 
-                                        <div class="post__infos">
-                                          <div class="post__likes">
-                                            <a href="#" class="post__likes-avatar">
-                                              <img src="{{ post.user.picture.url }}" alt="User Picture" />
-                                            </a>
-
-                                            <span
-                                              >
-                                              <a class="post__name--underline" href="#">{{ post.likes.count }} Likes</a>
-                                              </span
-                                            >
-                                          </div>
-
-                                          <div class="post__description">
+                                        <div class="post__description">
                                             <span>
                                                 <a class="post__name--underline" href="#"><b>{{ post.user.username }}</b></a>
                                               {{ post.caption }}
                                             </span>
-                                          </div>
-
-                                            <span class="">
-                        {#                        {% for tag in post.tags.all %}#}
-                        {#                            <a href="{{ tag.get_absolute_url }}" style="text-decoration: none">#{{ tag }}</a>#}
-                        {#                        {% endfor %}#}
-                                                {% for tag in post.tags.all %}
-                                                   <a href="{% url 'tag-detail' slug=tag.slug %}">#{{ tag.name }}</a>
-                                                {% endfor %}
-                                            </span>
-
-                                          <span class="post__date-time">{{ post.posted| timesince_hours }} ago</span>
                                         </div>
-                                      </div>
 
+                                        <span class="">
+                                            {% for tag in post.tags.all %}
+                                               <a href="{% url 'tag-detail' slug=tag.slug %}" style="color: var(--text-dark);">#{{ tag.name }}</a>
+                                            {% endfor %}
+                                        </span>
+
+                                        <span class="post__date-time">{{ post.posted|timesince_hours }} ago</span>
+
+                                    </div>
+
+                                    <div class="clearfix"></div>
+                              <br><br>
+                                   <form method="POST" enctype="multipart/form-data" action="{% url 'tag-detail' slug=tag.slug %}">
+                                        {% csrf_token %}
+                                            <input type="hidden" name="post_id" value="{{ post.id }}">
+                                            <div style="width: 85%; border: 1px solid salmon">{{ comment_form.as_p }}</div>
+
+                                            <div style="position: relative; margin-left: 87%; margin-top: -5%">
+                                                <input class="input-1" type="submit" value="Share" style="color: #1161ee; padding: 5px; font-weight: 900"/>
+                                            </div>
+
+                                    </form>
+
+                              </div>
 
                         </article>
+
                       </div>
 
                   </div>

@@ -158,10 +158,42 @@ def tag_list(request):
     return render(request, 'hashtags.html', {'tags': tags})
 
 
+@login_required
 def tag_detail(request, slug):
     tag = get_object_or_404(Tag, slug=slug)
     posts = tag.post_set.all()
-    return render(request, 'tag_detail2.html', {'tag': tag, 'posts': posts})
+
+    # Create a dictionary to map post IDs to their comments
+    post_comments = {}
+    for post in posts:
+        comments = Comment.objects.filter(post=post).select_related('user')
+        post_comments[post.id] = comments
+
+    # Count the comments for each post
+    comment_counts = {post_id: len(comment_list) for post_id, comment_list in post_comments.items()}
+
+    # Comment form
+    comment_form = CommentForm()
+
+    # Handle comment submission
+    if request.method == 'POST':
+        comment_form = CommentForm(request.POST)
+        if comment_form.is_valid():
+            body = comment_form.cleaned_data['body']
+            post_id = request.POST.get('post_id')
+            post = Post.objects.get(id=post_id)
+            comment = Comment.objects.create(post=post, user=request.user, body=body)
+            return redirect('tag-detail', slug=slug)
+
+    context = {
+        'tag': tag,
+        'posts': posts,
+        'post_comments': post_comments,
+        'comment_counts': comment_counts,
+        'comment_form': comment_form,
+    }
+    return render(request, 'tag_detail2.html', context)
+
 
 
 @login_required
@@ -254,35 +286,4 @@ def favourite(request, post_id):
     return HttpResponseRedirect(reverse('post_detail', args=[post_id]))
 
 
-# @login_required()
-# def new_post(request):
-#     user = request.user.id
-#     tags_objs = []
-#
-#     if request.method == "POST":
-#         form = NewPostForm(request.POST, request.FILES)
-#         if form.is_valid():
-#             picture = form.cleaned_data.get('picture')
-#             caption = form.cleaned_data.get('caption')
-#             tag_form = form.cleaned_data.get('tag')
-#             tags_list = list(str(tag_form).split(','))
-#             # when user puts a comma the above code will know that now it's a different hashtag being put
-#
-#             for tag in tags_list:
-#                 t, created = Tag.objects.get_or_create(name=tag)
-#                 tags_objs.append(t)
-#             p, created = Post.objects.get_or_create(picture=picture, caption=caption, user_id=user)
-#             p.tags.set(tags_objs)
-#             p.save()
-#             # return and execute the function named index
-#             return redirect('index')
-#
-#         # if method in form is not POST
-#
-#     else:
-#         form = NewPostForm()
-#         context = {
-#             'form': form
-#         }
-#         return render(request, 'newpost.html', context)
 #
