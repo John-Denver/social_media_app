@@ -322,7 +322,7 @@
 
                               <div class="post__footer">
                                 <div class="post__buttons">
-                                <form method="post" action="{% url 'like_post' %}">
+                                <form method="post" action="{% url 'like-post' %}">
                                     {% csrf_token %}
                                         <button type="submit" class="like-btn" data-post-id="{{ post.id }}">
                                             {% if request.user in post.likes.all %}

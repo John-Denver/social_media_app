@@ -17,7 +17,7 @@ urlpatterns = [
     path('tags/<slug:slug>/', views.tag_detail, name='tag-detail'),
 
     # path('<uuid:post_id>/like', views.likes, name="like"),
-    path('like-post/', views.like_post, name='like_post'),
+    # path('like-post/', views.like_post, name='like-post'),
     path('<uuid:post_id>/favourite', views.favourite, name="post-favourite"),
 
     path('story_detail/', views.story_detail, name='story_detail'),

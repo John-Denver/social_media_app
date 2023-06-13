@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+{% load my_filters %}
+{% load static %}
+
+{% block content %}
+    <main class="main-container">
+          <section class="content-container">
+                <div class="content">
+
+                    <div class="posts">
+                    {% for post in post_items %}
+                        <article class="post">
+                            <!-----post content here------>
+
+                      <div class="post__footer">
+                        <div class="post__buttons">
+                                            <!-- Like button -->
+                            <button class="btn btn-white mr-3 like" id="{{ post.id }}" type="submit">
+                                {% if post in liked_post %}
+                                <a href="#" data-url="{% url 'like-post' %}" style="color: red" id="likebtn{{ post.id }}">
+                                  Unlike
+                                </a>
+                                | {{post.likes.count}} {% else %}
+                                <a href="#" data-url="{% url 'like-post' %}" style="color: green" id="likebtn{{ post.id }}">
+                                  Like
+                                </a>
+                                | {{post.likes.count}} {% endif %}
+                            </button>
+                            <script>
+                              $(".like a").click(function (e) {
+                                e.preventDefault();
+
+                                var id = $(this).attr("id");
+                                var url = $(this).data("url");
+
+                                $.ajax({
+                                  url: url,
+                                  type: "GET",
+                                  data: {
+                                    likeId: id,
+                                  },
+                                  success: function (response) {
+                                    if (response.liked) {
+                                      $("#likebtn" + id).html("Unlike");
+                                      $("#likebtn" + id).css("color", "red");
+                                    } else {
+                                      $("#likebtn" + id).html("Like");
+                                      $("#likebtn" + id).css("color", "green");
+                                    }
+                                  },
+                                  error: function (xhr, errmsg, err) {
+                                    console.log(xhr.status + ": " + xhr.responseText);
+                                  }
+                                });
+                              });
+                            </script>
+
+                        </div>
+
+                        <div class="post__infos">
+                          <div class="post__likes">
+                             <span                              >
+                              <a class="post__name--underline" href="#">{{ post.likes.count }} Likes</a>
+                             </span>
+                          </div>
+                        </div>
+
+                      </div>
+                    </article>
+                    {% endfor %}
+                  </div>
+
+                </div>
+
+               {% include 'side-menu.html' %}
+
+          </section>
+    </main>
+
+
+{% endblock content %}

@@ -64,7 +64,8 @@ class Post(models.Model):
     posted = models.DateTimeField(auto_now_add=True)
     tags = models.ManyToManyField(Tag, blank=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    likes = models.ManyToManyField(User, related_name='post_likes', blank=True)
+    likes = models.ManyToManyField(User, related_name='likes', blank=True, default=None)
+    like_count = models.BigIntegerField(default=0)
 
     # likes = models.IntegerField(default=0)
 
@@ -97,6 +98,11 @@ class Stream(models.Model):
             stream = Stream(post=post, user=follower.follower, date=post.posted, following=user)
             stream.save()
 
+
+# class Like(models.Model):
+#     user = models.ForeignKey(User, related_name='likes', on_delete=models.CASCADE)
+#     post = models.ForeignKey(Post, related_name='likes', on_delete=models.CASCADE)
+#     created_at = models.DateTimeField(auto_now_add=True)
 
 # class Likes(models.Model):
 #     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="likes")

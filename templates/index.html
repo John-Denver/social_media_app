@@ -7,6 +7,7 @@
 {% load static %}
 
 {% block content %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <!-- Modal -->
     {% for story in stories %}
@@ -184,16 +185,37 @@
 
                       <div class="post__footer">
                         <div class="post__buttons">
-                        <form method="post" action="{% url 'like_post' %}">
-                            {% csrf_token %}
-                                <button type="submit" class="like-btn" data-post-id="{{ post.id }}">
-                                    {% if request.user in post.likes.all %}
-                                        Unlike
-                                    {% else %}
-                                        Like
-                                    {% endif %}
-                                </button>
-                        </form>
+                                    <!-- Like button -->
+                            <button class="like-button" id="like-button-{{ post.id }}" data-postid="{{ post.id }}">
+                                {% if request.user in post.likes.all %}
+                                    Unlike
+                                {% else %}
+                                    Like
+                                {% endif %}
+                            </button>
+                           <script>
+                              $(document).on('click', '.like-button', function (e) {
+                                e.preventDefault();
+                                var postid = $(this).data('postid');
+                                var csrfToken = $('input[name=csrfmiddlewaretoken]').val();
+
+                                $.ajax({
+                                  type: 'POST',
+                                  url: '{% url "index" %}',
+                                  data: {
+                                    postid: postid,
+                                    csrfmiddlewaretoken: csrfToken,
+                                    action: 'post'
+                                  },
+                                  success: function (json) {
+                                    $('#like_count_' + postid).text(json.result + ' Likes');
+                                  },
+                                  error: function (xhr, errmsg, err) {
+                                    // Handle error if needed
+                                  }
+                                });
+                              });
+                            </script>
 
                             {# Comment icon #}
                         {% if comment_counts|get_item:post.id > 0 %}
@@ -239,11 +261,7 @@
                               <img src="{{ post.user.picture.url }}" alt="User Picture" />
                             </a>
 
-                            <span
-                              >
-                              <a class="post__name--underline" href="#">{{ post.likes.count }} Likes</a>
-                              </span
-                            >
+                            <span id="like_count_{{ post.id }}">{{ post.like_count }} Likes</span>
                           </div>
 
                           <div class="post__description">

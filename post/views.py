@@ -4,7 +4,10 @@ import string
 from itertools import groupby
 
 from django.contrib.auth.models import User
+from django.db.models import Count
 from django.shortcuts import render, redirect, get_object_or_404
+from django.views.decorators.csrf import csrf_exempt
+from django.views.generic import ListView
 
 from comment.forms import CommentForm
 from post.models import Tag, Post, Stream, Follow, Media
@@ -17,6 +20,7 @@ from django.http import HttpResponseRedirect, JsonResponse, HttpResponse
 from django.urls import reverse
 from userauth.models import Profile
 from comment.models import Comment
+from django.views.decorators.csrf import csrf_exempt
 
 
 # Create your views here.
@@ -65,6 +69,24 @@ def index(request):
             # Redirect back to the index page
             return redirect('index')
 
+    if request.POST.get('action') == 'post':
+        result = ''
+        post_id = request.POST.get('postid')
+        post = get_object_or_404(Post, id=post_id)
+        if post.likes.filter(id=request.user.id).exists():
+            post.likes.remove(request.user)
+            if post.like_count > 0:
+                post.like_count -= 1
+            result = post.like_count
+            post.save()
+        else:
+            post.likes.add(request.user)
+            post.like_count += 1
+            result = post.like_count
+            post.save()
+
+        return JsonResponse({'result': result})
+
     context = {
         'post_items': post_items,
         'all_users': all_users,
@@ -76,7 +98,6 @@ def index(request):
         'comment_form': comment_form,
     }
     return render(request, 'index.html', context)
-
 
 
 @login_required()
@@ -109,7 +130,7 @@ def new_post(request):
             post = Post.objects.create(caption=caption, user=user)
 
             # for file in request.FILES.getlist('media'):
-    #     media = Media.objects.create(media_type='image', file=file, content_object=post, object_id=post.id, post=post)
+            #     media = Media.objects.create(media_type='image', file=file, content_object=post, object_id=post.id, post=post)
             for file in request.FILES.getlist('media'):
                 media = Media.objects.create(file=file, post=post, content_object=post)
 
@@ -193,7 +214,6 @@ def tag_detail(request, slug):
         'comment_form': comment_form,
     }
     return render(request, 'tag_detail2.html', context)
-
 
 
 @login_required
@@ -284,6 +304,5 @@ def favourite(request, post_id):
     else:
         profile.favourite.add(post)
     return HttpResponseRedirect(reverse('post_detail', args=[post_id]))
-
 
 #
