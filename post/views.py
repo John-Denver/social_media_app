@@ -78,14 +78,18 @@ def index(request):
             if post.like_count > 0:
                 post.like_count -= 1
             result = post.like_count
-            post.save()
         else:
             post.likes.add(request.user)
             post.like_count += 1
             result = post.like_count
-            post.save()
+        post.save()
 
         return JsonResponse({'result': result})
+
+    # Update like counts for each post
+    for post in post_items:
+        post.like_count = post.likes.count()
+        post.save()
 
     context = {
         'post_items': post_items,
