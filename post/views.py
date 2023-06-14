@@ -78,13 +78,15 @@ def index(request):
             if post.like_count > 0:
                 post.like_count -= 1
             result = post.like_count
+            is_liked = False  # Set is_liked to False if the user unlikes the post
         else:
             post.likes.add(request.user)
             post.like_count += 1
             result = post.like_count
+            is_liked = True  # Set is_liked to True if the user likes the post
         post.save()
 
-        return JsonResponse({'result': result})
+        return JsonResponse({'result': result, 'is_liked': is_liked})
 
     # Update like counts for each post
     for post in post_items:
@@ -220,83 +222,6 @@ def tag_detail(request, slug):
     return render(request, 'tag_detail2.html', context)
 
 
-@login_required
-def like_post(request):
-    post_id = request.POST.get('post_id')
-    action = request.POST.get('action')
-    if post_id and action:
-        try:
-            post = get_object_or_404(Post, id=post_id)
-            if action == 'like':
-                user = request.user
-                post.likes.add(user=user)
-            else:
-                user = request.user
-                post.likes.remove(user=user)
-            return JsonResponse({'status': 'ok'})
-        except:
-            pass
-    return JsonResponse({'status': 'error'})
-
-
-# @login_required()
-# def likes(request, post_id):
-#     post_id = request.GET.get("likeId", post_id)
-#     user = request.user
-#     post = Post.objects.get(pk=post_id)
-#     current_likes = post.likes
-#
-#     # the post.likes above comes from models.py class Post which takes the variable likes
-#     # so like is associated to a post hence, post.likes
-#     # liked = Likes.objects.filter(user=user, post=post).count()
-#     liked = False
-#     like = Likes.objects.filter(user=user, post=post)
-#     if like:
-#         like.delete()
-#     else:
-#         liked = True
-#         Likes.objects.create(user=user, post=post)
-#     resp = {
-#         'liked': liked
-#     }
-#     response = json.dumps(resp)
-#     return HttpResponse(response, content_type="application/json")
-
-# @login_required()
-# def likes(request, post_id):
-#     user = request.user
-#     post = Post.objects.get(id=post_id)
-#     current_likes = post.likes
-#
-#     # the post.likes above comes from models.py class Post which takes the variable likes
-#     # so like is associated to a post hence, post.likes
-#     # liked = Likes.objects.filter(user=user, post=post).count()
-#     liked = False
-#     like = Likes.objects.filter(user=user, post=post)
-#     if like:
-#         like.delete()
-#     else:
-#         liked = True
-#         Likes.objects.create(user=user, post=post)
-#     resp = {
-#         'liked': liked
-#     }
-#     response = json.dumps(resp)
-#     return HttpResponse(response, content_type="application/json")
-
-# if not liked:
-#     liked = Likes.objects.create(user=user, post=post)
-#     current_likes = current_likes + 1
-#
-# else:
-#     liked = Likes.objects.filter(user=user, post=post).delete()
-#     current_likes = current_likes - 1
-#
-# post.likes = current_likes
-# post.save()
-# return HttpResponseRedirect(reverse('post_detail', args=[post_id]))
-
-
 @login_required()
 def favourite(request, post_id):
     user = request.user
@@ -305,8 +230,46 @@ def favourite(request, post_id):
 
     if profile.favourite.filter(id=post_id).exists():
         profile.favourite.remove(post)
+        is_favourite = False
     else:
         profile.favourite.add(post)
-    return HttpResponseRedirect(reverse('post_detail', args=[post_id]))
+        is_favourite = True
 
+    response_data = {
+        'is_favourite': is_favourite,
+    }
+
+    return JsonResponse(response_data)
+
+
+# @login_required()
+# def favourite(request, post_id):
+#     user = request.user
+#     post = Post.objects.get(id=post_id)
+#     profile = Profile.objects.get(user=user)
 #
+#     if profile.favourite.filter(id=post_id).exists():
+#         profile.favourite.remove(post)
+#     else:
+#         profile.favourite.add(post)
+#     return HttpResponseRedirect(reverse('post_detail', args=[post_id]))
+
+
+# #@login_required
+# def like_post(request):
+#     post_id = request.POST.get('post_id')
+#     action = request.POST.get('action')
+#     if post_id and action:
+#         try:
+#             post = get_object_or_404(Post, id=post_id)
+#             if action == 'like':
+#                 user = request.user
+#                 post.likes.add(user=user)
+#             else:
+#                 user = request.user
+#                 post.likes.remove(user=user)
+#             return JsonResponse({'status': 'ok'})
+#         except:
+#             pass
+#     return JsonResponse({'status': 'error'})
+

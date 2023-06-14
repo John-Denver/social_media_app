@@ -188,71 +188,45 @@
                                     <!-- Like button -->
                             <button class="like-button" id="like-button-{{ post.id }}" data-postid="{{ post.id }}">
                                 {% if request.user in post.likes.all %}
-                                    Unlike
+                                     <i class="fa-solid fa-heart fa-2x" style="color: red"></i>{#Unlike#}
                                 {% else %}
-                                    Like
+                                     <i class="fa-regular fa-heart fa-2x"></i> {#like#}
                                 {% endif %}
                             </button>
                            <script>
-                              $(document).on('click', '.like-button', function (e) {
-                                e.preventDefault();
-                                var postid = $(this).data('postid');
-                                var csrfToken = $('input[name=csrfmiddlewaretoken]').val();
 
-                                $.ajax({
-                                  type: 'POST',
-                                  url: '{% url "index" %}',
-                                  data: {
-                                    postid: postid,
-                                    csrfmiddlewaretoken: csrfToken,
-                                    action: 'post'
-                                  },
-                                  success: function (json) {
-                                    $('#like_count_' + postid).text(json.result + ' Likes');
-                                  },
-                                  error: function (xhr, errmsg, err) {
-                                    // Handle error if needed
-                                  }
-                                });
-                              });
+
                             </script>
 
                             {# Comment icon #}
                         {% if comment_counts|get_item:post.id > 0 %}
                               <a href="{% url 'post_detail' post.id %}" class="post__button">
-                                    <i class="fa-regular fa-comment fa-2x" style="color: black; font-size: 20px;">
+                                    <i class="fa-regular fa-comment fa-2x">
                                         &nbsp;{{ comment_counts|get_item:post.id }}
                                     </i>
                               </a>
                         {% else %}
                               <a href="{% url 'post_detail' post.id %}" class="post__button">
-                                    <i class="fa-regular fa-comment fa-2x" style="color: black; font-size: 20px;">
+                                    <i class="fa-regular fa-comment fa-2x" >
                                         &nbsp;0
                                     </i>
                               </a>
                         {% endif %}
                                 {# Send message icon #}
                           <a href="" class="post__button">
-                                <i class="fa-regular fa-paper-plane fa-2x" style="color: black; font-size: 27px;"></i>
+                                <i class="fa-regular fa-paper-plane fa-2x" style="color: black;"></i>
                           </a>
 
                           <div class="post__indicators"></div>
 
-                          <a href="{% url 'post-favourite' post.id %}" class="post__button post__button--align-right">
-                            <svg
-                              width="24"
-                              height="24"
-                              viewBox="0 0 24 24"
-                              fill="none"
-                              xmlns="http://www.w3.org/2000/svg"
-                            >
-                              <path
-                                d="M19.875 2H4.125C3.50625 2 3 2.44939 3 3.00481V22.4648C3 23.0202 3.36563 23.1616 3.82125 22.7728L11.5444 16.1986C11.7244 16.0471 12.0225 16.0471 12.2025 16.1936L20.1731 22.7879C20.6287 23.1666 21 23.0202 21 22.4648V3.00481C21 2.44939 20.4994 2 19.875 2ZM19.3125 20.0209L13.3444 15.0827C12.9281 14.7394 12.405 14.5677 11.8763 14.5677C11.3363 14.5677 10.8019 14.7444 10.3856 15.0979L4.6875 19.9502V3.51479H19.3125V20.0209Z"
-                                fill="var(--text-dark)"
-                                stroke="var(--text-dark)"
-                                stroke-width="0.7"></path>
-                            </svg>
-                          </a>
+                          <a href="{% url 'post-favourite' post.id %}"
+                               class="post__button post__button--align-right favourite-button"
+                               data-post-id="{{ post.id }}"
+                               data-is-favourite="{{ post.is_favourite }}">
+                               <i class="fa-2x" style="color: var(--text-orange);"></i>
+                            </a>
+
+
                         </div>
 
                         <div class="post__infos">
@@ -294,6 +268,7 @@
 
           </section>
     </main>
+
 
     <nav class="navbar">
       <a href="#" class="navbar__button">
@@ -394,6 +369,102 @@
       </button>
     </nav>
 
+
+    <script>
+     $(document).on('click', '.like-button', function (e) {
+    e.preventDefault();
+    var postid = $(this).data('postid');
+    var csrfToken = $('input[name=csrfmiddlewaretoken]').val();
+
+    $.ajax({
+      type: 'POST',
+      url: '{% url "index" %}',
+      data: {
+        postid: postid,
+        csrfmiddlewaretoken: csrfToken,
+        action: 'post'
+      },
+      success: function (json) {
+        $('#like_count_' + postid).text(json.result + ' Likes');
+        if (json.is_liked) {
+            button.find('i').removeClass('fa-regular').addClass('fa-solid').css('color', 'red');
+        } else {
+            button.find('i').removeClass('fa-solid').addClass('fa-regular').css('color', '');
+        }
+      },
+      error: function (xhr, errmsg, err) {
+        // Handle error if needed
+      }
+    });
+  });
+
+  $(document).ready(function() {
+    var csrftoken = getCookie('csrftoken');
+
+    $('.favourite-button').on('click', function(event) {
+        event.preventDefault();
+
+        var post_id = $(this).data('post-id');
+        var iconElement = $(this).find('i');
+
+        $.ajax({
+            url: $(this).attr('href'),
+            type: 'POST',
+            dataType: 'json',
+            beforeSend: function(xhr, settings) {
+                xhr.setRequestHeader('X-CSRFToken', csrftoken);
+            },
+            success: function(response) {
+                // Handle the response as needed
+                if (response.is_favourite) {
+                    // Post was added to favorites
+                    iconElement.removeClass().addClass('fas fa-bookmark fa-2x');
+                    setFavoriteCookie(post_id, true);
+                } else {
+                    // Post was removed from favorites
+                    iconElement.removeClass().addClass('far fa-bookmark fa-2x');
+                    setFavoriteCookie(post_id, false);
+                }
+            },
+            error: function(xhr, status, error) {
+                // Handle error if necessary
+            }
+        });
+    });
+
+    // Initialize the icons based on the initial favorite status
+    $('.favourite-button').each(function() {
+        var isFavourite = $(this).data('is-favourite');
+        var iconElement = $(this).find('i');
+
+        if (isFavourite) {
+            iconElement.addClass('fas fa-bookmark');
+        } else {
+            iconElement.addClass('far fa-bookmark');
+        }
+    });
+});
+
+function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+function setFavoriteCookie(post_id, isFavorite) {
+    document.cookie = 'favorite_' + post_id + '=' + isFavorite + ';path=/';
+}
+
+    </script>
 {% endblock content %}
 
 
