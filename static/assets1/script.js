@@ -3,6 +3,7 @@ var j = jQuery.noConflict();
 j(function() {
 
 const toggleThemeBtn = document.querySelector('.header__theme-button');
+const toggleThemeBtn2 = document.querySelector('.header__theme-button2');
 const storiesContent = document.querySelector('.stories__content');
 const storiesLeftButton = document.querySelector('.stories__left-button');
 const storiesRightButton = document.querySelector('.stories__right-button');
@@ -23,6 +24,19 @@ function setInitialTheme(themeKey) {
 
 // Toggle theme button
 toggleThemeBtn.addEventListener('click', () => {
+  // Toggle root class
+  document.documentElement.classList.toggle('darkTheme');
+
+  // Saving current theme on LocalStorage
+  if (document.documentElement.classList.contains('darkTheme')) {
+    localStorage.setItem('theme', 'dark');
+  } else {
+    localStorage.setItem('theme', 'light');
+  }
+});
+
+// Toggle theme button for mobile
+toggleThemeBtn2.addEventListener('click', () => {
   // Toggle root class
   document.documentElement.classList.toggle('darkTheme');
 

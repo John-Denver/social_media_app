@@ -80,6 +80,12 @@ img { max-width: 100%; }
     z-index: 2;
 }
 
+@media (min-width: 767px) {
+    .header{
+        display: none;
+    }
+}
+
 .header::after {
     content: '';
     position: absolute;
@@ -566,7 +572,7 @@ img { max-width: 100%; }
 .side-menu {
     max-width: 290px;
     position: fixed;
-    left: 50%; top: 84px;
+    left: 50%; top: 24px;
     transform: translateX(calc(-50% + 322px));
 
     display: none;
@@ -642,6 +648,7 @@ img { max-width: 100%; }
 .side-menu__suggestions-section {
     display: flex;
     flex-direction: column;
+    /*overflow: scroll;*/
 }
 .side-menu__suggestions-header {
     display: flex;
@@ -767,6 +774,8 @@ img { max-width: 100%; }
     text-transform: uppercase;
 }
 
+/* end side menu / sidebar */
+
 /* Profile Button */
 .profile-button {
     background-color: transparent;
@@ -873,6 +882,12 @@ img { max-width: 100%; }
 
     .navbar {
         display: none;
+    }
+    .main-container{
+        margin-top: 10px;
+    }
+    .side-menu{
+        margin-top: 13px;
     }
 }
 
