@@ -1,0 +1,23 @@
+{% load static %}
+{% for user in users %}
+        <div class="side-menu__user-profile" style="text-align: start; background-color: var(--main_colour); border: solid var(--border) 1px; padding: 10px; border-radius: 25px;">
+            <a href="{% url 'profile' user.username %}" class="side-menu__user-avatar">
+                {% if user.profile.image %}
+                    <img src="{{ user.profile.image.url }}" alt="User Picture">
+                {% else %}
+                    <img src="{% static 'assets1/default.jpg' %}" alt="User Picture">
+                {% endif %}
+            </a>
+            <div class="side-menu__user-idnfo">
+                {% if user.profile.first_name %}
+                    <a href="{% url 'profile' user.username %}" style="font-size: 15px; color: var(--text-dark); text-align: center;">{{user.profile.first_name|title }} {{user.profile.last_name|title }}</a>
+                {% else %}
+                    <a href="{% url 'profile' user.username %}" style="font-size: 15px; color: var(--text-dark);">App User</a>
+                {% endif %}
+                <br>
+                <span style="font-size: 14px; color: var(--text-dark);">@{{user.username}}</span>
+                <br>
+                <a href="{% url 'profile' user.username %}" style="color: var(--link);" class="side-menu__user-button">View Profile</a>
+            </div>
+        </div>
+    {% endfor %}

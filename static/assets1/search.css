@@ -1,4 +1,3 @@
-
 #wrapper {
   width: 100%;
   height: 100vh;
@@ -8,15 +7,14 @@
   padding-top: 5rem;
 }
 
-#wrapper > .container {
-  display: flex;
-  padding: 0 2rem;
+#searchResults{
+   background-color: var(--main_colour);
 }
 
-.phone-app-demo {
-  height: 61.8rem;
-  background: url("./images/mobile-app.png") center no-repeat;
-  flex: 1;
+.container {
+  display: flex;
+  padding: 0 2rem;
+  background: var(--main_colour);
 }
 
 .form-data {
@@ -26,11 +24,12 @@
   margin-left: auto;
   margin-right: auto;
   display: block;
+  background-color: var(--main_colour);
 }
 
 .form-data form {
-  background-color: #fff;
-  border: 2px solid #eee;
+  background-color: var(--main_colour);
+  border: 2px solid var(--border);
   display: flex;
   flex-direction: column;
   padding: 2rem 1rem;
@@ -45,14 +44,16 @@
 .form-data form input {
   padding: .8rem;
   margin-bottom: .5rem;
-  border: 2px solid #eee;
+  border: 2px solid var(--border);
   border-radius: .4rem;
+  background: var(--main_colour);
+  color: var(--text-dark);
 }
 
 .form-btn {
   margin: 1rem 0 1.5rem;
   height: 3rem;
-  background-color: #3897f0;
+  background-color: var(--text-orange);
   font-size: 1.4rem;
   font-weight: bold;
   color: #fff;
@@ -73,7 +74,7 @@
 .has-separator::after {
   content: "";
   position: absolute;
-  background-color: #eee;
+  background-color: var(--main_colour);
   width: 40%;
   height: 2px;
   top: 50%;
@@ -108,27 +109,16 @@
 .sign-up {
   text-align: center;
   font-size: 1.4rem;
-  color: #262626;
+  color: var(--text-dark);
   padding: 2rem 0;
-  background-color: #fff;
-  border: 2px solid #eee;
+  background-color: var(--text-dark);
+  border: 2px solid var(--border);
   margin: 1rem 0;
 }
 
 .sign-up a {
-  color: #3897f0;
+  color: var(--link);
   font-weight: bold;
-}
-
-.get-the-app {
-  font-size: 1.4rem;
-  text-align: center;
-}
-
-.get-the-app span {
-  display: block;
-  margin: 2rem 0;
-  color: #262626;
 }
 
 footer {
@@ -166,17 +156,13 @@ footer .container {
 /* MEDIA QUERIES */
 
 @media (max-width: 900px) {
-  .phone-app-demo {
-    display: none;
-  }
-
   .form-data {
-    background-color: #fff;
+    background-color: var(--main_colour);
 
     margin: 0 auto;
   }
 
-  .wrapper > .container {
+  .container {
     padding: 0;
   }
 
@@ -200,7 +186,7 @@ footer .container {
   }
 
   .form-data form {
-    background-color: white;
+    background-color: var(--main_colour);
     border: none;
     /* padding: 0 2rem; */
   }

@@ -11,6 +11,8 @@
   </head>
   <body>
 
+  {% include 'search.html' %}
+
     <aside class="sidebar">
       <header class="sidebar-header">
          <div class="header__buttons">
@@ -77,14 +79,14 @@
             </button>
           </a>
 
-          <a href="{% url 'user_search' %}" class="iconic">
-            <button>
+{#          <a href="{% url 'user_search' %}" class="iconic">#}
+            <button data-toggle="modal" data-target="#searchuserModal">
               <span>
                 <i class="uil uil-search"></i>
                 <span>Search</span>
               </span>
             </button>
-          </a>
+{#          </a>#}
 
           <a href="{% url 'index' %}" class="iconic">
             <button>
