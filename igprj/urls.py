@@ -37,6 +37,7 @@ urlpatterns = [
     path('message/', include('chatting.urls')),
     path('authorize/', include('users.urls')),
     path('stories/', include('stories.urls')),
+    path('notification/', include('notifications.urls')),
 
     #     Profile page urls
 

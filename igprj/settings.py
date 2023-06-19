@@ -50,7 +50,8 @@ INSTALLED_APPS = [
     'chatting',
     'users',
     'stories',
-    'corsheaders',
+    'notifications',
+    'django.contrib.humanize',
 
     # the above is Cross-Origin Resource Sharing to allow request and prevent 403 error
 ]

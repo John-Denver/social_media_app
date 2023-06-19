@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
-from django.db.models.signals import post_save, post_delete
+from django.db.models.signals import post_save, post_delete, m2m_changed
 from django.utils.text import slugify
 from django.urls import reverse
 import uuid
@@ -11,6 +11,9 @@ from django.contrib.contenttypes.fields import GenericForeignKey, GenericRelatio
 
 
 # uploads user files to a specific directory
+from notifications.models import Notification
+
+
 def user_directory_path(instance, filename):
     return 'user_{0}/{1}'.format(instance.user.id, filename)
 
@@ -63,22 +66,45 @@ class Post(models.Model):
     caption = models.CharField(max_length=10000, verbose_name="caption")
     posted = models.DateTimeField(auto_now_add=True)
     tags = models.ManyToManyField(Tag, blank=True)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    likes = models.ManyToManyField(User, related_name='likes', blank=True, default=None)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='post_owner')
+    likes = models.ManyToManyField(User, related_name='likes', blank=True, default=0)
     like_count = models.BigIntegerField(default=0)
-
-    # likes = models.IntegerField(default=0)
-
-    # def get_absolute_url(self):
-    #     return reverse("post_detail", args=[str(self.id)])
 
     def __str__(self):
         return str(self.caption)
 
 
+def create_like_notification(sender, instance, action, reverse, model, pk_set, **kwargs):
+    if action == "post_add" and not reverse:
+        post = instance
+        likers = User.objects.filter(pk__in=pk_set)  # Retrieve the users who liked the post
+        recipient = post.user  # The owner of the post
+        for sender in likers:
+            Notification.objects.create(
+                recipient=recipient,
+                sender=sender,
+                notification_type=1  # 1 represents a like notification
+            )
+
+
 class Follow(models.Model):
     follower = models.ForeignKey(User, on_delete=models.CASCADE, related_name='follower')
     following = models.ForeignKey(User, on_delete=models.CASCADE, related_name='following')
+
+    def user_follow(sender, instance, *args, **kwargs):
+        follow = instance
+        sender = follow.follower
+        following = follow.following
+        notify = Notification(sender=sender, recipient=following, notification_type=3)
+        notify.save()
+
+    def user_unfollow(sender, instance, *args, **kwargs):
+        follow = instance
+        sender = follow.follower
+        following = follow.following
+
+        notify = Notification.objects.filter(sender=sender, recipient=following, notification_type=3)
+        notify.delete()
 
 
 # when you follow a user you get to stream/see what they have posted
@@ -99,17 +125,14 @@ class Stream(models.Model):
             stream.save()
 
 
-# class Like(models.Model):
-#     user = models.ForeignKey(User, related_name='likes', on_delete=models.CASCADE)
-#     post = models.ForeignKey(Post, related_name='likes', on_delete=models.CASCADE)
-#     created_at = models.DateTimeField(auto_now_add=True)
-
-# class Likes(models.Model):
-#     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="likes")
-#     post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name="likes")
-
-
 post_save.connect(Stream.add_post, sender=Post)
+
+# Likes
+m2m_changed.connect(create_like_notification, sender=Post.likes.through)
+
+# Follow
+post_save.connect(Follow.user_follow, sender=Follow)
+post_delete.connect(Follow.user_unfollow, sender=Follow)
 
 #
 # class Story(models.Model):
