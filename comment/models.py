@@ -22,6 +22,7 @@ def create_comment_notification(sender, instance, created, **kwargs):
         recipient = post.user
         message = f"{sender.username} commented on your post: {comment.body}"
         Notification.objects.create(
+            post=post,
             message=message,
             recipient=recipient,
             sender=sender,

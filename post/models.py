@@ -82,6 +82,7 @@ def create_like_notification(sender, instance, action, reverse, model, pk_set, *
         for sender in likers:
             Notification.objects.create(
                 recipient=recipient,
+                post=post,
                 sender=sender,
                 notification_type=1  # 1 represents a like notification
             )

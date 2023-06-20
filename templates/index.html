@@ -288,46 +288,6 @@
     </main>
 
 
-    <nav class="navbar">
-      <a href="{% url 'index' %}" class="navbar__button">
-        <i class="uil uil-estate" style="font-size: 25px;"></i>
-      </a>
-      <a href="{% url 'user_search' %}" class="navbar__button">
-        <i class="uil uil-search" style="font-size: 25px;"></i>
-      </a>
-      <a href="#" class="navbar__button">
-        <i class="uil uil-compass" style="font-size: 25px;"></i>
-      </a>
-      <a href="{% url 'logout' %}" class="navbar__button">
-        <i class="uil uil-sign-out-alt" style="font-size: 25px;"> </i>
-      </a>
-
-        {% if user.profile %}
-              <a href="{% url 'profile' user.username %}">
-                  <button class="navbar__button profile-button">
-                    <div class="profile-button__border"></div>
-                    <div class="profile-button__picture">
-                      {% if user.profile.image %}
-                        <img src="{{ user.profile.image.url }}" alt="User Picture">
-                      {% else %}
-                        <img src="{% static 'assets1/default-user.png' %}" alt="User Picture">
-                      {% endif %}
-                    </div>
-                  </button>
-              </a>
-        {% else %}
-              <a href="{% url 'add_profile' %}">
-                  <button class="navbar__button profile-button">
-                    <div class="profile-button__border"></div>
-                    <div class="profile-button__picture">
-                         <img src="{% static 'assets1/default-user.png' %}" alt="User Picture">
-                    </div>
-                  </button>
-              </a>
-        {% endif %}
-    </nav>
-
-
     <script>
      $(document).on('click', '.like-button', function (e) {
     e.preventDefault();

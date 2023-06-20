@@ -246,6 +246,26 @@ $(document).ready(function() {
 
 });
 
+//Counting notifications
+$(document).ready(function() {
+        // Make an AJAX request to the get_notification_count URL
+        $.ajax({
+            url: "{% url 'get_notification_count' %}",
+            success: function(data) {
+                // Check if there are notifications
+                if (data.count_notifications > 0) {
+                    // Update the count and show the span
+                    $("#notification-count").text(data.count_notifications);
+                    $("#notification-count").show();
+                } else {
+                    // Hide the span if there are no notifications
+                    $("#notification-count").hide();
+                }
+            }
+        });
+    });
+
+
 //
 // $(".like").click(function (e) {
 //   var id = id;

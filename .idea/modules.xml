@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/InstaClone.iml" filepath="$PROJECT_DIR$/.idea/InstaClone.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../instagram-app-notifications/.idea/instagram-app-notifications.iml" filepath="$PROJECT_DIR$/../instagram-app-notifications/.idea/instagram-app-notifications.iml" />
     </modules>
   </component>
 </project>
