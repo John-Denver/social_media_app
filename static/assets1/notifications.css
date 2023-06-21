@@ -15,7 +15,7 @@
 	position: fixed;
 	top: 0;
 	padding-top: 15px;
-	padding-bottom: 15px;
+	padding-bottom: 7px;
 	color: var(--text-dark);
 	background-color: var(--main_colour);
 	z-index: 10;

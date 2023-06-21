@@ -170,115 +170,115 @@
 
 
                     <div class="posts">
-                    {% for post in post_items %}
-                        <article class="post">
-                      <div class="post__header">
-                            <div class="post__profile">
-                              <a href="#" class="post__avatar">
-                                <img src="{% static 'assets1/default-user.png' %}" alt="User Picture" />
-                              </a>
-                              <a href="{{ post.user.username }}" class="post__user">{{ post.user.username }}</a>
-                            </div>
+                        {% for post in post_items %}
+                            <article class="post">
+                              <div class="post__header">
+                                    <div class="post__profile">
+                                      <a href="#" class="post__avatar">
+                                        <img src="{% static 'assets1/default-user.png' %}" alt="User Picture" />
+                                      </a>
+                                      <a href="{{ post.user.username }}" class="post__user">{{ post.user.username }}</a>
+                                    </div>
 
-                            <button class="post__more-options" data-toggle="modal" data-target="#deletepostModal">
-                              <i class="fa-solid fa-ellipsis fa-lg"></i>
-                            </button>
-                      </div>
+                                    <button class="post__more-options" data-toggle="modal" data-target="#deletepostModal">
+                                      <i class="fa-solid fa-ellipsis fa-lg"></i>
+                                    </button>
+                              </div>
 
-{#                      <a href="{% url 'post_detail' post.id %}">#}
-                        <a href="{% url 'post_detail' post.id %}" class="" data-toggle="modal" data-target="#exampleModalCenter2_{{ post.id }}">
-                          <div class="post__content">
-                                 <div class="post__medias">
-                                    {% for media in post.media.all %}
-                                        {% if media.file.url|lower|ends_with:".jpg" or media.file.url|lower|ends_with:".jpeg" or media.file.url|lower|ends_with:".png" or media.file.url|lower|ends_with:".gif" %}
-                                            <img class="post__media" src="{{ media.file.url }}" alt="Post Content" style="height: 400px; object-fit: cover"/>
-                                        {% elif media.file.url|lower|ends_with:".mp4" %}
-                                            <video class="post__media" src="{{ media.file.url }}" autoplay muted loop style="height: 400px; object-fit: cover"></video>
-                                        {% endif %}
-                                    {% endfor %}
-                                </div>
-                          </div>
-                        </a>
-{#                      </a>#}
+            {#                      <a href="{% url 'post_detail' post.id %}">#}
+                                    <a href="{% url 'post_detail' post.id %}" class="" data-toggle="modal" data-target="#exampleModalCenter2_{{ post.id }}">
+                                      <div class="post__content">
+                                             <div class="post__medias">
+                                                {% for media in post.media.all %}
+                                                    {% if media.file.url|lower|ends_with:".jpg" or media.file.url|lower|ends_with:".jpeg" or media.file.url|lower|ends_with:".png" or media.file.url|lower|ends_with:".gif" %}
+                                                        <img class="post__media" src="{{ media.file.url }}" alt="Post Content" style="height: 400px; object-fit: cover"/>
+                                                    {% elif media.file.url|lower|ends_with:".mp4" %}
+                                                        <video class="post__media" src="{{ media.file.url }}" autoplay muted loop style="height: 400px; object-fit: cover"></video>
+                                                    {% endif %}
+                                                {% endfor %}
+                                            </div>
+                                      </div>
+                                    </a>
+            {#                      </a>#}
 
-                      <div class="post__footer">
-                        <div class="post__buttons">
-                                    <!-- Like button -->
-                            <button class="like-button" id="like-button-{{ post.id }}" data-postid="{{ post.id }}">
-                                {% if request.user in post.likes.all %}
-                                     <i class="fa-solid fa-heart fa-2x" style="color: red"></i>{#Unlike#}
-                                {% else %}
-                                     <i class="fa-regular fa-heart fa-2x"></i> {#like#}
-                                {% endif %}
-                            </button>
-                           <script>
-
-
-                            </script>
-
-                            {# Comment icon #}
-                        {% if comment_counts|get_item:post.id > 0 %}
-                              <a href="{% url 'post_detail' post.id %}" class="post__button">
-                                    <i class="fa-regular fa-comment fa-2x">
-                                        &nbsp;{{ comment_counts|get_item:post.id }}
-                                    </i>
-                              </a>
-                        {% else %}
-                              <a href="{% url 'post_detail' post.id %}" class="post__button">
-                                    <i class="fa-regular fa-comment fa-2x" >
-                                        &nbsp;0
-                                    </i>
-                              </a>
-                        {% endif %}
-                                {# Send message icon #}
-                          <a href="" class="post__button">
-                                <i class="fa-regular fa-paper-plane fa-2x" style="color: black;"></i>
-                          </a>
-
-                          <div class="post__indicators"></div>
-
-                          <a href="{% url 'post-favourite' post.id %}"
-                               class="post__button post__button--align-right favourite-button"
-                               data-post-id="{{ post.id }}"
-                               data-is-favourite="{{ post.is_favourite }}" title="favourite">
-                               <i class="fa-2x" style="color: var(--text-dark);"></i>
-                            </a>
+                                  <div class="post__footer">
+                                    <div class="post__buttons">
+                                                <!-- Like button -->
+                                        <button class="like-button" id="like-button-{{ post.id }}" data-postid="{{ post.id }}">
+                                            {% if request.user in post.likes.all %}
+                                                 <i class="fa-solid fa-heart fa-2x" style="color: red"></i>{#Unlike#}
+                                            {% else %}
+                                                 <i class="fa-regular fa-heart fa-2x"></i> {#like#}
+                                            {% endif %}
+                                        </button>
+                                       <script>
 
 
-                        </div>
+                                        </script>
 
-                        <div class="post__infos">
-                          <div class="post__likes">
-                            <a href="#" class="post__likes-avatar">
-                              <img src="{{ post.user.picture.url }}" alt="User Picture" />
-                            </a>
+                                        {# Comment icon #}
+                                    {% if comment_counts|get_item:post.id > 0 %}
+                                          <a href="{% url 'post_detail' post.id %}" class="post__button">
+                                                <i class="fa-regular fa-comment fa-2x">
+                                                    &nbsp;{{ comment_counts|get_item:post.id }}
+                                                </i>
+                                          </a>
+                                    {% else %}
+                                          <a href="{% url 'post_detail' post.id %}" class="post__button">
+                                                <i class="fa-regular fa-comment fa-2x" >
+                                                    &nbsp;0
+                                                </i>
+                                          </a>
+                                    {% endif %}
+                                            {# Send message icon #}
+                                      <a href="" class="post__button">
+                                            <i class="fa-regular fa-paper-plane fa-2x" style="color: black;"></i>
+                                      </a>
 
-                            <span id="like_count_{{ post.id }}">{{ post.like_count }} Likes</span>
-                          </div>
+                                      <div class="post__indicators"></div>
 
-                          <div class="post__description">
-                            <span>
-                                <a class="post__name--underline" href="#"><b>{{ post.user.username }}</b></a>
-                              {{ post.caption }}
-                            </span>
-                          </div>
-
-                            <span class="">
-        {#                        {% for tag in post.tags.all %}#}
-        {#                            <a href="{{ tag.get_absolute_url }}" style="text-decoration: none">#{{ tag }}</a>#}
-        {#                        {% endfor %}#}
-                                {% for tag in post.tags.all %}
-                                   <a href="{% url 'tag-detail' slug=tag.slug %}">#{{ tag.name }}</a>
-                                {% endfor %}
-                            </span>
+                                      <a href="{% url 'post-favourite' post.id %}"
+                                           class="post__button post__button--align-right favourite-button"
+                                           data-post-id="{{ post.id }}"
+                                           data-is-favourite="{{ post.is_favourite }}" title="favourite">
+                                           <i class="fa-2x" style="color: var(--text-dark);"></i>
+                                        </a>
 
 
-                          <span class="post__date-time">{{ post.posted| timesince_hours }} ago</span>
-                        </div>
-                      </div>
-                    </article>
-                    {% endfor %}
-                  </div>
+                                    </div>
+
+                                    <div class="post__infos">
+                                      <div class="post__likes">
+                                        <a href="#" class="post__likes-avatar">
+                                          <img src="{{ post.user.picture.url }}" alt="User Picture" />
+                                        </a>
+
+                                        <span id="like_count_{{ post.id }}">{{ post.like_count }} Likes</span>
+                                      </div>
+
+                                      <div class="post__description">
+                                        <span>
+                                            <a class="post__name--underline" href="#"><b>{{ post.user.username }}</b></a>
+                                          {{ post.caption }}
+                                        </span>
+                                      </div>
+
+                                        <span class="">
+                    {#                        {% for tag in post.tags.all %}#}
+                    {#                            <a href="{{ tag.get_absolute_url }}" style="text-decoration: none">#{{ tag }}</a>#}
+                    {#                        {% endfor %}#}
+                                            {% for tag in post.tags.all %}
+                                               <a href="{% url 'tag-detail' slug=tag.slug %}">#{{ tag.name }}</a>
+                                            {% endfor %}
+                                        </span>
+
+
+                                      <span class="post__date-time">{{ post.posted| timesince_hours }} ago</span>
+                                    </div>
+                                  </div>
+                            </article>
+                        {% endfor %}
+                    </div>
 
                 </div>
 
