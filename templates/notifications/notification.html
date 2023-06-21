@@ -107,11 +107,19 @@
                                                     <span class="ia_time">{{ notification.timestamp|timesince_hours }} ago</span>
                                                 </div>
                                                 <div class="col-3 align-self-center text-right">
-                                                    <button>
-                                                        <a href="{% url 'follow' notification.sender.username 1 %}" class="ia_btn_follow_toggle">
-                                                          Follow
-                                                        </a>
-                                                    </button>
+                                                    {% if follow_statuses %}
+                                                            <button>
+                                                                <a href="{% url 'follow' notification.sender.username 0 %}" class="ia_btn_unfollow_toggle">
+                                                                  UnFollow
+                                                                </a>
+                                                            </button>
+                                                    {% else %}
+                                                            <button>
+                                                                <a href="{% url 'follow' notification.sender.username 1 %}" class="ia_btn_follow_toggle">
+                                                                  Follow
+                                                                </a>
+                                                            </button>
+                                                    {% endif %}
                                                 </div>
                                             </div>
                                     {% endif %}
@@ -191,11 +199,19 @@
                                                     <span class="ia_time">{{ notification.timestamp|timesince_hours }} ago</span>
                                                 </div>
                                                 <div class="col-3 align-self-center text-right">
-                                                   <button>
-                                                        <a href="{% url 'follow' notification.sender.username 1 %}" class="ia_btn_follow_toggle">
-                                                          Follow
-                                                        </a>
-                                                    </button>
+                                                   {% if follow_status %}
+                                                            <button>
+                                                                <a href="{% url 'follow' notification.sender.username 0 %}" class="ia_btn_unfollow_toggle">
+                                                                  UnFollow
+                                                                </a>
+                                                            </button>
+                                                    {% else %}
+                                                            <button>
+                                                                <a href="{% url 'follow' notification.sender.username 1 %}" class="ia_btn_follow_toggle">
+                                                                  Follow
+                                                                </a>
+                                                            </button>
+                                                    {% endif %}
                                                 </div>
                                             </div>
                                     {% endif %}
@@ -276,11 +292,19 @@
                                                     <span class="ia_time">{{ notification.timestamp|timesince_hours }} ago</span>
                                                 </div>
                                                 <div class="col-3 align-self-center text-right">
-                                                    <button>
-                                                        <a href="{% url 'follow' notification.sender.username 1 %}" class="ia_btn_follow_toggle">
-                                                          Follow
-                                                        </a>
-                                                    </button>
+                                                    {% if follow_statuses %}
+                                                            <button>
+                                                                <a href="{% url 'follow' notification.sender.username 0 %}" class="ia_btn_unfollow_toggle">
+                                                                  UnFollow
+                                                                </a>
+                                                            </button>
+                                                    {% else %}
+                                                            <button>
+                                                                <a href="{% url 'follow' notification.sender.username 1 %}" class="ia_btn_follow_toggle">
+                                                                  Follow
+                                                                </a>
+                                                            </button>
+                                                    {% endif %}
                                                 </div>
                                             </div>
                                     {% endif %}
