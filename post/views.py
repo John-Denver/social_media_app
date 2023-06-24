@@ -7,7 +7,7 @@ from django.contrib.auth.models import User
 from django.db.models import Count
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
-from django.views.generic import ListView
+from django.views.generic import ListView, DeleteView
 
 from comment.forms import CommentForm
 from post.models import Tag, Post, Stream, Follow, Media
@@ -17,7 +17,7 @@ from django.contrib.auth.decorators import login_required
 # from post.forms import NewPostForm
 from .forms import PostForm, MediaFormSet
 from django.http import HttpResponseRedirect, JsonResponse, HttpResponse
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 from userauth.models import Profile
 from comment.models import Comment
 from django.views.decorators.csrf import csrf_exempt
@@ -240,6 +240,38 @@ def favourite(request, post_id):
     }
 
     return JsonResponse(response_data)
+
+
+@login_required
+def post_delete(request, post_id):
+    username = request.user.username
+    delete_post = get_object_or_404(Post, id=post_id)
+
+    if request.method == 'POST':
+        # Perform the delete operation
+        delete_post.delete()
+        return redirect('profile', username=username)
+
+    context = {'delete_post': delete_post}
+    return render(request, 'profile.html', context)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 # @login_required()

@@ -5,6 +5,9 @@ from django.contrib.auth.models import User
 from chatting.models import Message
 from django.core.paginator import Paginator
 from django.db.models import Q
+from django.http import HttpResponse
+from django.template.loader import render_to_string
+from django.shortcuts import render
 
 
 @login_required
@@ -28,7 +31,8 @@ def inbox(request):
         'active_direct': active_direct,
         'messages': messages,
     }
-    return render(request, 'chatting/inbox.html', context)
+    return render(request, 'chatting/whatsapp.html', context)
+    # return render(request, 'chatting/inbox.html', context)
 
 
 @login_required
@@ -47,7 +51,8 @@ def chats(request, username):
         'active_direct': active_direct,
         'messages': messages,
     }
-    return render(request, 'chatting/chats.html', context)
+    return render(request, 'chatting/chat_view.html', context)
+    # return render(request, 'chatting/chats.html', context)
 
 
 @login_required
@@ -62,15 +67,6 @@ def send_chat(request):
         return redirect('inbox')
     else:
         pass
-
-
-from django.http import HttpResponse
-from django.template.loader import render_to_string
-from django.shortcuts import render
-
-from django.http import HttpResponse
-from django.template.loader import render_to_string
-from django.shortcuts import render
 
 
 @login_required

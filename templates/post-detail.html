@@ -129,9 +129,13 @@
                                         </div>
 
                                         <span class="">
-                                            {% for tag in post.tags.all %}
-                                               <a href="{% url 'tag-detail' slug=tag.slug %}" style="color: var(--text-dark);">#{{ tag.name }}</a>
-                                            {% endfor %}
+                                            {% if post.tags %}
+                                                {% for tag in post.tags.all %}
+                                                    {% if tag.slug %}
+                                                        <a href="{% url 'tag-detail' slug=tag.slug %}" style="color: var(--text-dark);">#{{ tag.name }}</a>
+                                                    {% endif %}
+                                                {% endfor %}
+                                            {% endif %}
                                         </span>
 
                                         <span class="post__date-time">{{ post.posted|timesince_hours }} ago</span>

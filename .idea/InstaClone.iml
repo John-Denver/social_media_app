@@ -27,6 +27,8 @@
     <orderEntry type="library" name="jquery-3.6.0" level="application" />
     <orderEntry type="library" name="line" level="application" />
     <orderEntry type="module" module-name="instagram-app-notifications" />
+    <orderEntry type="library" name="ionicons" level="application" />
+    <orderEntry type="library" name="remixicon" level="application" />
   </component>
   <component name="TemplatesService">
     <option name="TEMPLATE_CONFIGURATION" value="Django" />

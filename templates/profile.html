@@ -3,6 +3,11 @@
 {% load static %}
 {% block content %}
 
+    {% for post in posts %}
+
+  {% endfor %}
+
+
 <main class="main-container">
 
   <div class="lg:w-8/12 lg:mx-auto mb-8">
@@ -299,9 +304,11 @@
                                       <a href="{{ post.user.username }}" class="post__user">{{ post.user.username }}</a>
                                     </div>
 
+                                  <a class="" data-toggle="modal" data-target="#deletePost_{{ post.id }}">
                                     <button class="post__more-options">
                                       <i class="fa-solid fa-ellipsis fa-lg"></i>
                                     </button>
+                                  </a>
                               </div>
 
                               <div class="comment-section">
@@ -382,12 +389,13 @@
                                   </div>
 
                                     <span class="">
-                {#                        {% for tag in post.tags.all %}#}
-                {#                            <a href="{{ tag.get_absolute_url }}" style="text-decoration: none">#{{ tag }}</a>#}
-                {#                        {% endfor %}#}
-                                        {% for tag in post.tags.all %}
-                                           <a href="{% url 'tag-detail' slug=tag.slug %}">#{{ tag.name }}</a>
-                                        {% endfor %}
+                                        {% if post.tags %}
+                                            {% for tag in post.tags.all %}
+                                                {% if tag.slug %}
+                                                    <a href="{% url 'tag-detail' slug=tag.slug %}" style="color: var(--text-dark);">#{{ tag.name }}</a>
+                                                {% endif %}
+                                            {% endfor %}
+                                        {% endif %}
                                     </span>
 
                                   <span class="post__date-time">{{ post.posted| timesince_hours }} ago</span>
@@ -416,10 +424,58 @@
               </div>
         </div>
 
+        <!------Delete post modal--------->
+    <div class="modal fade" id="deletePost_{{ post.id }}" tabindex="0" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title" id="exampleModalLabel">Delete Post?</h1>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary mr-auto" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#confirmDelete_{{ post.id }}" data-dismiss="modal">Delete Post</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+       <div class="modal fade confirmDelete" id="confirmDelete_{{ post.id }}" tabindex="0" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title" id="exampleModalLabel">Delete Post?</h1>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+        <div class="modal-body">
+            Are you sure you want to delete this Post?
+        </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary mr-auto" data-dismiss="modal">Close</button>
+          <form method="post" action="{% url 'post_delete' post.id %}">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger">Confirm Delete</button>
+          </form>
+          </a>
+      </div>
+    </div>
+  </div>
+</div>
    {% endfor %}
 
   </div>
 </main>
+
+    <script>
+  // When opening Modal 2, close Modal 1
+  $('#openModal2').on('click', function() {
+    $('.confirmDelete').modal('hide');
+  });
+</script>
 
 <style>
 .post-container {
