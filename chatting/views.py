@@ -31,10 +31,14 @@ def inbox(request):
             # Append the usernames to the list
             usernames.append(message['user'].username)
 
+    # Retrieve user objects for each username
+    user_profile = [User.objects.get(username=username) for username in usernames]
+
     context = {
         'directs': directs,
         'active_direct': active_direct,
         'messages': messages,
+        'user_profile': user_profile,
         'usernames': usernames,  # Pass the usernames to the template context
     }
     return render(request, 'chatting/whatsapp.html', context)

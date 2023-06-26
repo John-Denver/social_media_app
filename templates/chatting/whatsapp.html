@@ -32,7 +32,11 @@
                     <li><a href="#" data-title="Settings"><i class="ri-settings-line"></i></a></li>
                     <li class="chat-sidebar-profile">
                         <button type="button" class="chat-sidebar-profile-toggle">
-                            <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OXx8cGVvcGxlfGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60" alt="">
+                            {% for direct in directs %}
+                                {% if forloop.first %}
+                                    <img src="{{ direct.user.profile.image.url }}" alt="">
+                                {% endif %}
+                            {% endfor %}
                         </button>
                         <ul class="chat-sidebar-profile-dropdown">
                             <li><a href="#"><i class="ri-user-line"></i> Profile</a></li>
@@ -54,12 +58,14 @@
                     <div class="content-messages">
                         <ul class="content-messages-list">
                             <li class="content-message-title"><span>Recently</span></li>
-                            {% for username in usernames %}
+                            {% for user in user_profile %}
                             <li>
-                                <a href="{% url 'chats' username %}" data-conversation="#{{ username }}">
-                                    <img class="content-message-image" src="{{ username.profile.image.url }}" alt="">
+                                <a href="{% url 'chats' user %}" data-conversation="#{{ user }}">
+                                    {% if user_profile %}
+                                                <img class="content-message-image" src="{{ user.profile.image.url }}" alt="">
+                                    {% endif %}
                                     <span class="content-message-info">
-                                        <span class="content-message-name">@{{ username }}</span>
+                                        <span class="content-message-name">@{{ user }}</span>
                                         <span class="content-message-text">Lorem ipsum dolor sit amet consectetur.</span>
                                     </span>
                                     <span class="content-message-more">
