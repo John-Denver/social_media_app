@@ -11,6 +11,12 @@
 </head>
 <body>
 
+{#{% for username in usernames %}#}
+{#                <div class="conversation" id="{{ username }}">#}
+{#                   <p>{{ username }}</p>#}
+{#                </div>#}
+{#            {% endfor %}#}
+
     <!-- start: Chat -->
     <section class="chat-section">
         <div class="chat-container">
@@ -48,12 +54,12 @@
                     <div class="content-messages">
                         <ul class="content-messages-list">
                             <li class="content-message-title"><span>Recently</span></li>
-                            {% for message in messages %}
+                            {% for username in usernames %}
                             <li>
-                                <a href="{% url 'chats' message.user.username %}" data-conversation="#{% for username in usernames %}{{ username }}{% endfor %}">
-                                    <img class="content-message-image" src="{{ message.user.profile.image.url }}" alt="">
+                                <a href="{% url 'chats' username %}" data-conversation="#{{ username }}">
+                                    <img class="content-message-image" src="{{ username.profile.image.url }}" alt="">
                                     <span class="content-message-info">
-                                        <span class="content-message-name">@{{ message.user.username }}</span>
+                                        <span class="content-message-name">@{{ username }}</span>
                                         <span class="content-message-text">Lorem ipsum dolor sit amet consectetur.</span>
                                     </span>
                                     <span class="content-message-more">
@@ -73,88 +79,8 @@
                     <i class="ri-chat-3-line"></i>
                     <p>Select chat and view conversation!</p>
                 </div>
-                <div class="conversation" id="{% for username in usernames %}{{ username }}{% endfor %}">
-                    <div class="conversation-top">
-                        <button type="button" class="conversation-back"><i class="ri-arrow-left-line"></i></button>
-                        <div class="conversation-user">
-                            <img class="conversation-user-image" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OXx8cGVvcGxlfGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60" alt="">
-                            <div>
-                                <div class="conversation-user-name">Someone</div>
-                                <div class="conversation-user-status online">online</div>
-                            </div>
-                        </div>
-                        <div class="conversation-buttons">
-                            <button type="button"><i class="ri-phone-fill"></i></button>
-                            <button type="button"><i class="ri-vidicon-line"></i></button>
-                            <button type="button"><i class="ri-information-line"></i></button>
-                        </div>
-                    </div>
-                    <div class="conversation-main">
-                        <ul class="conversation-wrapper">
-                            <div class="coversation-divider"><span>Today</span></div>
 
-                            {% for direct in directs %}
-                                {% if direct.sender == request.user %}
-                                    <li class="conversation-item me">
-                                        <div class="conversation-item-side">
-                                            <img class="conversation-item-image" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OXx8cGVvcGxlfGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60" alt="">
-                                        </div>
-                                        <div class="conversation-item-content">
-                                            <div class="conversation-item-wrapper">
-                                                <div class="conversation-item-box">
-                                                    <div class="conversation-item-text">
-                                                        {% if direct.body %}<p>{{ direct.body }}</p>{% endif %}
-                                                        <div class="conversation-item-time">{{ direct.date|date:"d M, P" }}</div>
-                                                    </div>
-                                                    <div class="conversation-item-dropdown">
-                                                        <button type="button" class="conversation-item-dropdown-toggle"><i class="ri-more-2-line"></i></button>
-                                                        <ul class="conversation-item-dropdown-list">
-                                                            <li><a href="#"><i class="ri-share-forward-line"></i> Forward</a></li>
-                                                            <li><a href="#"><i class="ri-delete-bin-line"></i> Delete</a></li>
-                                                        </ul>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </li>
-                            {% else %}
-                                    <li class="conversation-item">
-                                        <div class="conversation-item-side">
-                                            <img class="conversation-item-image" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OXx8cGVvcGxlfGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60" alt="">
-                                        </div>
-                                        <div class="conversation-item-content">
-                                            <div class="conversation-item-wrapper">
-                                                <div class="conversation-item-box">
-                                                    <div class="conversation-item-text">
-                                                        {% if direct.body %}<p>{{ direct.body }}</p>{% endif %}
-                                                        <div class="conversation-item-time">{{ direct.date|date:"d M, P" }}</div>
-                                                    </div>
-                                                    <div class="conversation-item-dropdown">
-                                                        <button type="button" class="conversation-item-dropdown-toggle"><i class="ri-more-2-line"></i></button>
-                                                        <ul class="conversation-item-dropdown-list">
-                                                            <li><a href="#"><i class="ri-share-forward-line"></i> Forward</a></li>
-                                                            <li><a href="#"><i class="ri-delete-bin-line"></i> Delete</a></li>
-                                                        </ul>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </li>
-                                {% endif %}
-                            {% endfor %}
-                        </ul>
-                    </div>
-                    <form class="conversation-form" method="POST" enctype="multipart/form-data" role="form" action="{% url 'send_chat' %}">
-                        {% csrf_token %}
-                            <button type="button" class="conversation-form-button"><i class="ri-emotion-line"></i></button>
-                            <div class="conversation-form-group">
-                                <input type="hidden" name="to_user" value="{{ active_direct }}">
-                                <input class="conversation-form-input" name="body" rows="1" placeholder="Type here..."/>
-                                <button type="button" class="conversation-form-record"><i class="ri-mic-line"></i></button>
-                            </div>
-                            <button type="submit" class="conversation-form-button conversation-form-submit"><i class="ri-send-plane-2-line"></i></button>
-                    </form>
-                </div>
+
                 <!-- end: Conversation -->
             </div>
             <!-- end: Content -->
@@ -207,23 +133,24 @@ document.querySelectorAll('.conversation-form-input').forEach(function(item) {
     })
 })
 
-document.querySelectorAll('[data-conversation]').forEach(function(item) {
-    item.addEventListener('click', function(e) {
-        e.preventDefault()
-        document.querySelectorAll('.conversation').forEach(function(i) {
-            i.classList.remove('active')
-        })
-        document.querySelector(this.dataset.conversation).classList.add('active')
-    })
-})
+{#document.querySelectorAll('[data-conversation]').forEach(function(item) {#}
+{#    item.addEventListener('click', function(e) {#}
+{#        // e.preventDefault();#}
+{#        document.querySelectorAll('.conversation').forEach(function(i) {#}
+{#            i.classList.remove('active');#}
+{#        });#}
+{#        document.querySelector(this.dataset.conversation).classList.add('active');#}
+{#    });#}
+{#});#}
 
 document.querySelectorAll('.conversation-back').forEach(function(item) {
     item.addEventListener('click', function(e) {
-        e.preventDefault()
-        this.closest('.conversation').classList.remove('active')
-        document.querySelector('.conversation-default').classList.add('active')
-    })
-})
+        e.preventDefault();
+        this.closest('.conversation').classList.remove('active');
+        document.querySelector('.conversation-default').classList.add('active');
+    });
+});
+
 // end: Coversation
     </script>
 </body>

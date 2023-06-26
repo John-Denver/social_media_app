@@ -11,6 +11,7 @@
 </head>
 <body>
 
+
     <!-- start: Chat -->
     <section class="chat-section">
         <div class="chat-container">
@@ -39,47 +40,25 @@
             <!-- start: Content -->
             <div class="chat-content">
                 <!-- start: Content side -->
-                <div class="content-sidebar">
-                    <div class="content-sidebar-title">Chats</div>
-                    <form action="" class="content-sidebar-form">
-                        <input type="search" class="content-sidebar-input" placeholder="Search...">
-                        <button type="submit" class="content-sidebar-submit"><i class="ri-search-line"></i></button>
-                    </form>
-                    <div class="content-messages">
-                        <ul class="content-messages-list">
-                            <li class="content-message-title"><span>Recently</span></li>
-                            {% for message in messages %}
-                            <li>
-                                <a href="{% url 'chats' message.user.username %}" data-conversation="#{{ message.user.username }}">
-                                    <img class="content-message-image" src="{{ message.user.profile.image.url }}" alt="">
-                                    <span class="content-message-info">
-                                        <span class="content-message-name">@{{ message.user.username }}</span>
-                                        <span class="content-message-text">Lorem ipsum dolor sit amet consectetur.</span>
-                                    </span>
-                                    <span class="content-message-more">
-                                        <span class="content-message-unread">5</span>
-                                        <span class="content-message-time">12:30</span>
-                                    </span>
-                                </a>
-                            </li>
-                            {% endfor %}
 
-                        </ul>
-                    </div>
-                </div>
                 <!-- end: Content side -->
-                <!-- start: Conversation -->
-                <div class="conversation conversation-default active">
-                    <i class="ri-chat-3-line"></i>
-                    <p>Select chat and view conversation!</p>
-                </div>
-                <div class="conversation" {% for message in messages %} id="{{ message.user.username }}" {% endfor %}>
+            {% for username in usernames %}
+                <div class="conversation main-convo
+                    {% for direct in directs %}
+                        {% if username == direct.recipient.username %}active{% endif %}
+                    {% endfor %}" id="{{ username }}">
                     <div class="conversation-top">
-                        <button type="button" class="conversation-back"><i class="ri-arrow-left-line"></i></button>
+                        <a href="{% url 'inbox' %}" style="text-decoration:none;">
+                         <button type="button" class="conversation-back"><i class="ri-arrow-left-line"></i></button>
+                        </a>
                         <div class="conversation-user">
                             <img class="conversation-user-image" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OXx8cGVvcGxlfGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60" alt="">
                             <div>
-                                <div class="conversation-user-name">Someone</div>
+                                {% for direct in directs %}
+                                    {% if forloop.first %}
+                                        <div class="conversation-user-name">{{ direct.recipient.username }}</div>
+                                    {% endif %}
+                                {% endfor %}
                                 <div class="conversation-user-status online">online</div>
                             </div>
                         </div>
@@ -94,7 +73,7 @@
                             <div class="coversation-divider"><span>Today</span></div>
 
                             {% for direct in directs %}
-                                {% if direct.sender == request.user %}
+                                {% if direct.sender == request.user and direct.recipient.username == username %}
                                     <li class="conversation-item me">
                                         <div class="conversation-item-side">
                                             <img class="conversation-item-image" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OXx8cGVvcGxlfGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60" alt="">
@@ -117,7 +96,7 @@
                                             </div>
                                         </div>
                                     </li>
-                            {% else %}
+                                {% elif direct.sender.username == username and direct.recipient == request.user %}
                                     <li class="conversation-item">
                                         <div class="conversation-item-side">
                                             <img class="conversation-item-image" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OXx8cGVvcGxlfGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60" alt="">
@@ -155,6 +134,8 @@
                             <button type="submit" class="conversation-form-button conversation-form-submit"><i class="ri-send-plane-2-line"></i></button>
                     </form>
                 </div>
+            {% endfor %}
+
                 <!-- end: Conversation -->
             </div>
             <!-- end: Content -->
@@ -207,24 +188,50 @@ document.querySelectorAll('.conversation-form-input').forEach(function(item) {
     })
 })
 
-document.querySelectorAll('[data-conversation]').forEach(function(item) {
-    item.addEventListener('click', function(e) {
-        e.preventDefault()
-        document.querySelectorAll('.conversation').forEach(function(i) {
-            i.classList.remove('active')
-        })
-        document.querySelector(this.dataset.conversation).classList.add('active')
-    })
-})
 
+// Conversation back button click event
 document.querySelectorAll('.conversation-back').forEach(function(item) {
     item.addEventListener('click', function(e) {
-        e.preventDefault()
-        this.closest('.conversation').classList.remove('active')
-        document.querySelector('.conversation-default').classList.add('active')
-    })
-})
-// end: Coversation
+        //e.preventDefault();
+        this.closest('.conversation').classList.remove('active');
+         //document.querySelector('.conversation-default').classList.add('active');
+    });
+});
+
+// Conversation link click event
+document.querySelectorAll('[data-conversation]').forEach(function(item) {
+    item.addEventListener('click', function(e) {
+        e.preventDefault();
+        document.querySelectorAll('.conversation').forEach(function(i) {
+            i.classList.remove('active');
+        });
+        document.querySelector(this.dataset.conversation).classList.add('active');
+
+        var conversationUrl = this.getAttribute('href');
+        var conversationId = this.dataset.conversation;
+        var conversationElement = document.querySelector('.main-convo#' + conversationId);
+
+        // Perform AJAX request to update the URL dynamically
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', conversationUrl);
+        xhr.onload = function() {
+            if (xhr.status === 200) {
+                // Update the URL
+                history.pushState(null, '', conversationUrl);
+
+                // Refresh the content of the selected conversation only
+                conversationElement.innerHTML = xhr.responseText;
+            }
+        };
+        xhr.send();
+    });
+});
+
+
+
+
+
+
     </script>
 </body>
 </html>

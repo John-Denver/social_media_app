@@ -16,6 +16,7 @@ def inbox(request):
     messages = Message.get_message(user=user)
     active_direct = None
     directs = None
+    usernames = []  # List to store usernames
 
     if messages:
         message = messages[0]
@@ -26,10 +27,15 @@ def inbox(request):
         for message in messages:
             if message['user'].username == active_direct:
                 message['unread'] = 0
+
+            # Append the usernames to the list
+            usernames.append(message['user'].username)
+
     context = {
         'directs': directs,
         'active_direct': active_direct,
         'messages': messages,
+        'usernames': usernames,  # Pass the usernames to the template context
     }
     return render(request, 'chatting/whatsapp.html', context)
     # return render(request, 'chatting/inbox.html', context)
@@ -42,14 +48,20 @@ def chats(request, username):
     active_direct = username
     directs = Message.objects.filter(user=user, recipient__username=username)
     directs.update(is_read=True)
+    usernames = []  # List to store usernames
 
     for message in messages:
         if message['user'].username == username:
             message['unread'] = 0
+
+        # Append the usernames to the list
+        usernames.append(message['user'].username)
+
     context = {
         'directs': directs,
         'active_direct': active_direct,
         'messages': messages,
+        'usernames': usernames,
     }
     return render(request, 'chatting/chat_view.html', context)
     # return render(request, 'chatting/chats.html', context)
