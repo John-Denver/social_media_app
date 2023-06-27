@@ -56,18 +56,22 @@
                         <a href="{% url 'inbox' %}" style="text-decoration:none;">
                          <button type="button" class="conversation-back"><i class="ri-arrow-left-line"></i></button>
                         </a>
-                    {% for direct in directs %}
-                        {% if forloop.first %}
-                            <div class="conversation-user">
-                                <img class="conversation-user-image" src="{{ direct.recipient.profile.image.url }}" alt="">
-                                <div>
-                                    <div class="conversation-user-name">{{ direct.recipient.username }}</div>
 
-                                    <div class="conversation-user-status online">online</div>
-                                </div>
+                            <div class="conversation-user">
+                                {% for direct in directs %}
+                                    {% if forloop.first %}
+                                    <img class="conversation-user-image" src="{{ direct.recipient.profile.image.url }}" alt="">
+                                    <div>
+                                        <a href="{% url 'profile' direct.recipient.username %}" style="text-decoration:none;">
+                                            <div class="conversation-user-name">{{ direct.recipient.username }}</div>
+                                        </a>
+
+                                        <div class="conversation-user-status online">online</div>
+                                    </div>
+                                    {% endif %}
+                                {% endfor %}
                             </div>
-                        {% endif %}
-                    {% endfor %}
+
                         <div class="conversation-buttons">
                             <button type="button"><i class="ri-phone-fill"></i></button>
                             <button type="button"><i class="ri-vidicon-line"></i></button>
@@ -80,10 +84,25 @@
 
                             {% for direct in directs %}
                                 {% if direct.sender == request.user %}
+                                    {% if not direct %}
+                                        <li class="conversation-item">
+                                            <div class="conversation-item-content">
+                                                <div class="conversation-item-wrapper">
+                                                    <div class="conversation-item-box">
+                                                            <div class="conversation-item-text">
+                                                                <p>Start Chat</p>
+                                                            </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        {% endif %}
                                     <li class="conversation-item">
+                                    {% if direct.body %}
                                         <div class="conversation-item-side">
                                             <img class="conversation-item-image" src="{{ direct.sender.profile.image.url }}" alt="">
                                         </div>
+                                        {% endif %}
                                         <div class="conversation-item-content">
                                             <div class="conversation-item-wrapper">
                                                 <div class="conversation-item-box">

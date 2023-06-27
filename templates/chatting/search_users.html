@@ -2,9 +2,10 @@
 {% if user_profile %}
     {% for user in user_profile %}
 
-        {% if last_messages %}
-            <li>
-                <a href="{% url 'chats' user %}" data-conversation="#{{ user }}">
+        {% for last_message in last_messages %}
+            {% if last_message.user == user %}
+                <li>
+                <a href="{% url 'new_message' user %}" data-conversation="#{{ user }}">
                     {% if user_profile %}
                                 <img class="content-message-image" src="{{ user.profile.image.url }}" alt="">
                     {% endif %}
@@ -21,36 +22,32 @@
                     </span>
                     <span class="content-message-more">
                         <span class="content-message-unread">5</span>
-                        {% for last_message in last_messages %}
                                 {% if last_message.user == user %}
-
                                     <span class="content-message-time">
                                             {{ last_message.last.date|timesince_hours }}
                                     </span>
                                 {% endif %}
-                            {% endfor %}
 
                     </span>
                 </a>
             </li>
             {% else %}
-            <a href="{% url 'new_message' user %}">
-            <li>
-                <a href="{% url 'chats' user %}" data-conversation="#{{ user }}">
-                    {% if user_profile %}
-                                <img class="content-message-image" src="{{ user.profile.image.url }}" alt="">
-                    {% endif %}
-                    <span class="content-message-info">
-                        <span class="content-message-name">@{{ user }}</span>
-                                    <span class="content-message-text">
-                                        Start Chart
-                                    </span>
-                                {</span>
-
+                <a href="{% url 'new_message' user %}">
+                    <li>
+                        <a href="{% url 'chats' user %}" data-conversation="#{{ user }}">
+                            {% if user_profile %}
+                                        <img class="content-message-image" src="{{ user.profile.image.url }}" alt="">
+                            {% endif %}
+                            <span class="content-message-info">
+                                <span class="content-message-name">@{{ user }}</span>
+                                <span class="content-message-text">
+                                    Start Chart
+                                </span>
+                            </span>
+                        </a>
+                    </li>
                 </a>
-            </li>
-            </a>
-        {% endif %}
+            {% endif %}
     {% endfor %}
 {% else %}
 <!-- Display "No results" message -->

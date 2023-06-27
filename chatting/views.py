@@ -44,6 +44,24 @@ def inbox(request):
     # Retrieve user objects for each username
     user_profile = [User.objects.get(username=username) for username in usernames]
 
+    if request.method == 'GET' and 'q' in request.GET:
+        query = request.GET.get('q')
+        users = User.objects.filter(username__icontains=query)[:5]  # Limit the results to 5 users
+
+        # Retrieve user objects for each username
+        user_profile = users
+
+        context = {
+            'user_profile': user_profile,
+            'last_messages': last_messages,
+        }
+
+        if request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest':  # check if request is ajax
+            search_results = render_to_string('chatting/search_users.html', context)
+            return HttpResponse(search_results, content_type='text/html')
+
+        return render(request, 'chatting/whatsapp.html', context)
+
     context = {
         'directs': directs,
         'active_direct': active_direct,
@@ -53,7 +71,6 @@ def inbox(request):
         'last_messages': last_messages,
     }
     return render(request, 'chatting/whatsapp.html', context)
-
     # return render(request, 'chatting/inbox.html', context)
 
 
