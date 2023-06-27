@@ -20,7 +20,7 @@ body {
 
 /* start: Chat */
 .chat-section {
-    box-shadow: inset 0 160px 0 0 var(--emerald-500);
+    box-shadow: inset 0 160px 0 0 var(--amber-500);
     min-height: 100vh;
     display: flex;
     align-items: center;
@@ -53,7 +53,7 @@ body {
 }
 .chat-sidebar-logo {
     font-size: 28px;
-    color: var(--emerald-600);
+    color: var(--amber-600);
     display: block;
     text-align: center;
     padding: 12px 8px;
@@ -80,9 +80,9 @@ body {
     color: var(--slate-600);
 }
 .chat-sidebar-menu > .active > a {
-    box-shadow: inset 4px 0 0 0 var(--emerald-500);
-    color: var(--emerald-600);
-    background-color: var(--emerald-100);
+    box-shadow: inset 4px 0 0 0 var(--amber-500);
+    color: var(--amber-600);
+    background-color: var(--amber-100);
 }
 .chat-sidebar-menu > * > a::before {
     content: attr(data-title);
@@ -301,7 +301,7 @@ body {
     font-size: 12px;
     font-weight: 500;
     color: var(--white);
-    background-color: var(--emerald-500);
+    background-color: var(--amber-500);
     padding: 2px 4px;
     border-radius: 4px;
 }
@@ -383,7 +383,7 @@ body {
     margin-right: 4px;
 }
 .conversation-user-status.online::before {
-    background-color: var(--emerald-500);
+    background-color: var(--amber-500);
 }
 .conversation-buttons {
     display: flex;
@@ -472,8 +472,8 @@ body {
     margin-right: 32px;
 }
 .conversation-item.me .conversation-item-text {
-    background-color: var(--emerald-500);
-    box-shadow: 0 2px 12px -2px var(--emerald-500);
+    background-color: var(--amber-500);
+    box-shadow: 0 2px 12px -2px var(--amber-500);
     color: rgba(255, 255, 255, .8);
 }
 .conversation-item-time {
@@ -517,12 +517,12 @@ body {
     transition: all .15s ease-in-out;
 }
 .conversation-item-dropdown-toggle:hover {
-    background-color: var(--emerald-500);
+    background-color: var(--amber-500);
     color: var(--white);
-    box-shadow: 0 2px 12px -2px var(--emerald-500);
+    box-shadow: 0 2px 12px -2px var(--amber-500);
 }
 .conversation-item-dropdown-toggle:active {
-    background-color: var(--emerald-600);
+    background-color: var(--amber-600);
 }
 .conversation-item-dropdown-list {
     position: absolute;
@@ -660,16 +660,16 @@ body {
     color: var(--slate-600);
 }
 .conversation-form-submit {
-    background-color: var(--emerald-500);
-    box-shadow: 0 2px 8px -2px var(--emerald-500);
+    background-color: var(--amber-500);
+    box-shadow: 0 2px 8px -2px var(--amber-500);
     color: var(--white);
 }
 .conversation-form-submit:hover {
-    background-color: var(--emerald-600);
+    background-color: var(--amber-600);
     color: var(--white);
 }
 .conversation-form-submit:active {
-    background-color: var(--emerald-700);
+    background-color: var(--amber-700);
     color: var(--white);
 }
 .conversation-default {
@@ -720,7 +720,7 @@ body {
         padding: 8px;
     }
     .chat-sidebar-menu > .active > a {
-        box-shadow: inset 0 4px 0 0 var(--emerald-500);
+        box-shadow: inset 0 4px 0 0 var(--amber-500);
     }
     .chat-sidebar-profile {
         margin-top: 0;

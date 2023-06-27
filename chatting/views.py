@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 
 from chatting.models import Message
 from django.core.paginator import Paginator
-from django.db.models import Q
+from django.db.models import Q, Max
 from django.http import HttpResponse
 from django.template.loader import render_to_string
 from django.shortcuts import render
@@ -17,6 +17,7 @@ def inbox(request):
     active_direct = None
     directs = None
     usernames = []  # List to store usernames
+    last_messages = []
 
     if messages:
         message = messages[0]
@@ -31,6 +32,15 @@ def inbox(request):
             # Append the usernames to the list
             usernames.append(message['user'].username)
 
+    for username in usernames:
+        last_message = Message.objects.filter(user=user, recipient__username=username).latest('date')
+        sender = last_message.sender
+        last_messages.append({
+            'user': User.objects.get(username=username),
+            'last': last_message,
+            'sender': sender,
+        })
+
     # Retrieve user objects for each username
     user_profile = [User.objects.get(username=username) for username in usernames]
 
@@ -40,8 +50,10 @@ def inbox(request):
         'messages': messages,
         'user_profile': user_profile,
         'usernames': usernames,  # Pass the usernames to the template context
+        'last_messages': last_messages,
     }
     return render(request, 'chatting/whatsapp.html', context)
+
     # return render(request, 'chatting/inbox.html', context)
 
 
@@ -80,7 +92,7 @@ def send_chat(request):
     if request.method == "POST":
         to_user = User.objects.get(username=to_user_username)
         Message.send_message(from_user, to_user, body)
-        return redirect('inbox')
+        return redirect('chats', username=to_user_username)  # Redirect to the chats view with the username parameter
     else:
         pass
 

@@ -37,7 +37,7 @@ class Message(models.Model):
     @staticmethod
     def get_message(user):
         users = []
-        messages = Message.objects.filter(user=user).values("recipient").annotate(last=Max('date')).order_by('-last')
+        messages = Message.objects.filter(user=user).values("recipient").annotate(last=Max('body')).order_by('-last')
         for message in messages:
             users.append({
                 'user': User.objects.get(pk=message['recipient']),

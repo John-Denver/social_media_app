@@ -1,3 +1,5 @@
+{% load humanize %}
+{% load my_filters %}
 {#{% extends 'base.html' %}#}
 {% load static %}
 <!DOCTYPE html>
@@ -66,11 +68,29 @@
                                     {% endif %}
                                     <span class="content-message-info">
                                         <span class="content-message-name">@{{ user }}</span>
-                                        <span class="content-message-text">Lorem ipsum dolor sit amet consectetur.</span>
+                                            {% for last_message in last_messages %}
+                                                {% if last_message.user == user %}
+                                                    <span class="content-message-text">
+                                                        {% if last_message.last.sender == request.user %}Me: {% else %}Them: {% endif %}
+                                                        {{ last_message.last.body }}
+                                                    </span>
+                                                {% endif %}
+                                            {% endfor %}
+
+
+
                                     </span>
                                     <span class="content-message-more">
                                         <span class="content-message-unread">5</span>
-                                        <span class="content-message-time">12:30</span>
+                                        {% for last_message in last_messages %}
+                                                {% if last_message.user == user %}
+
+                                                    <span class="content-message-time">
+                                                            {{ last_message.last.date|timesince_hours }}
+                                                    </span>
+                                                {% endif %}
+                                            {% endfor %}
+
                                     </span>
                                 </a>
                             </li>

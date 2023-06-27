@@ -74,7 +74,7 @@
                             <button type="button"><i class="ri-information-line"></i></button>
                         </div>
                     </div>
-                    <div class="conversation-main">
+                    <div class="conversation-main" id="conversation-main">
                         <ul class="conversation-wrapper">
                             <div class="coversation-divider"><span>Today</span></div>
 
@@ -233,6 +233,28 @@ document.querySelectorAll('[data-conversation]').forEach(function(item) {
         };
         xhr.send();
     });
+});
+
+$(document).ready(function() {
+  function refreshContent() {
+    var conversationUrl = window.location.href
+    // Perform an AJAX request
+    $.ajax({
+      url: conversationUrl, // Replace with your actual endpoint URL
+      method: 'GET',
+      success: function(response) {
+        // Update the content of the <div> element
+        $('#conversation-main').html(response);
+      },
+      complete: function() {
+        // Schedule the next refresh after 3 seconds
+        setTimeout(refreshContent, 2000);
+      }
+    });
+  }
+
+  // Initial call to start refreshing content
+  refreshContent();
 });
 
 
